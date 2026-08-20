@@ -1,0 +1,10 @@
+{
+  "manifestVersion": "bom-property-fixtures/v1",
+  "hashAlgorithm": "SHA-256",
+  "files": [
+    {
+      "path": "stable-key-diff.v1.json",
+      "sha256": "6b659097ec9d8433a942f8617d00c2a7ee591d23d9660f3d03ce3f787f397187"
+    }
+  ]
+}

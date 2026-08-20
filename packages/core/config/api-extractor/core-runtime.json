@@ -1,0 +1,10 @@
+{
+  "extends": "../../api-extractor.base.json",
+  "mainEntryPointFilePath": "<projectFolder>/.build/runtime.d.ts",
+  "bundledPackages": [
+    "@bom-editor/runtime"
+  ],
+  "apiReport": {
+    "reportFileName": "core-runtime"
+  }
+}

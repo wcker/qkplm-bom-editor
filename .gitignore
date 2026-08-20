@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.build/
+.npm-cache/
+.pnpm-store/
+.tmp-chrome-cdp/
+benchmarks/reports/
+coverage/
+*.tsbuildinfo
+.DS_Store
+Thumbs.db
+/artifacts/*.log

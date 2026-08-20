@@ -1,0 +1,380 @@
+{
+  "traceEvents": [
+    {
+      "args": {
+        "data": {
+          "callTime": 31000000,
+          "navigationId": "fixture-navigation",
+          "sampleTraceId": 2,
+          "startTime": 30000
+        }
+      },
+      "cat": "blink.user_timing",
+      "name": "bom:f3:scroll:fixture-window:end",
+      "ph": "I",
+      "pid": 70,
+      "s": "t",
+      "tid": 71,
+      "ts": 31000000
+    },
+    {
+      "args": {},
+      "cat": "benchmark,viz,disabled-by-default-display.framedisplayed",
+      "name": "Display::FrameDisplayed",
+      "ph": "I",
+      "pid": 90,
+      "s": "t",
+      "tid": 91,
+      "ts": 1050001
+    },
+    {
+      "args": {
+        "begin_frame_args": {
+          "frame_time_us": 1000000,
+          "interval_delta_us": 16667
+        }
+      },
+      "cat": "viz,input.scrolling",
+      "dur": 12,
+      "name": "ExternalBeginFrameSource::OnBeginFrame",
+      "ph": "X",
+      "pid": 90,
+      "tid": 91,
+      "ts": 1000012
+    },
+    {
+      "args": {
+        "frame_reporter": {
+          "checkerboarded_needs_raster": false,
+          "checkerboarded_needs_record": false,
+          "display_trace_id": 105,
+          "frame_sequence": 5,
+          "frame_source": 4294967297,
+          "has_missing_content": false,
+          "layer_tree_host_id": 1,
+          "scroll_state": "SCROLL_MAIN_THREAD",
+          "state": "STATE_PRESENTED_ALL",
+          "surface_frame_trace_id": -105
+        }
+      },
+      "cat": "cc,benchmark,disabled-by-default-devtools.timeline.frame",
+      "id2": { "local": "0x5" },
+      "name": "PipelineReporter",
+      "ph": "b",
+      "pid": 80,
+      "tid": 81,
+      "ts": 30990000
+    },
+    {
+      "args": {},
+      "cat": "benchmark,viz,disabled-by-default-display.framedisplayed",
+      "name": "Display::FrameDisplayed",
+      "ph": "I",
+      "pid": 90,
+      "s": "t",
+      "tid": 91,
+      "ts": 31000000
+    },
+    {
+      "args": {},
+      "cat": "cc,benchmark,disabled-by-default-devtools.timeline.frame",
+      "id2": { "local": "0x5" },
+      "name": "PipelineReporter",
+      "ph": "e",
+      "pid": 80,
+      "tid": 81,
+      "ts": 31000000
+    },
+    {
+      "args": {
+        "begin_frame_args": {
+          "frame_time_us": 30983333,
+          "interval_delta_us": 16667
+        }
+      },
+      "cat": "viz,input.scrolling",
+      "dur": 9,
+      "name": "ExternalBeginFrameSource::OnBeginFrame",
+      "ph": "X",
+      "pid": 90,
+      "tid": 91,
+      "ts": 30983340
+    },
+    {
+      "args": {
+        "frame_reporter": {
+          "checkerboarded_needs_raster": false,
+          "checkerboarded_needs_record": false,
+          "display_trace_id": 103,
+          "frame_sequence": 3,
+          "frame_source": 4294967297,
+          "has_missing_content": true,
+          "layer_tree_host_id": 1,
+          "scroll_state": "SCROLL_MAIN_THREAD",
+          "state": "STATE_PRESENTED_PARTIAL",
+          "surface_frame_trace_id": -103
+        }
+      },
+      "cat": "cc,benchmark,disabled-by-default-devtools.timeline.frame",
+      "id2": { "local": "0x3" },
+      "name": "PipelineReporter",
+      "ph": "b",
+      "pid": 80,
+      "tid": 81,
+      "ts": 1020000
+    },
+    {
+      "args": {},
+      "cat": "benchmark,viz,disabled-by-default-display.framedisplayed",
+      "name": "Display::FrameDisplayed",
+      "ph": "I",
+      "pid": 90,
+      "s": "t",
+      "tid": 91,
+      "ts": 1000000
+    },
+    {
+      "args": {
+        "data": {
+          "callTime": 1000000,
+          "navigationId": "fixture-navigation",
+          "sampleTraceId": 1,
+          "startTime": 0
+        }
+      },
+      "cat": "blink.user_timing",
+      "name": "bom:f3:scroll:fixture-window:start",
+      "ph": "I",
+      "pid": 70,
+      "s": "t",
+      "tid": 71,
+      "ts": 1000000
+    },
+    {
+      "args": {
+        "frame_reporter": {
+          "checkerboarded_needs_raster": false,
+          "checkerboarded_needs_record": false,
+          "display_trace_id": 101,
+          "frame_sequence": 1,
+          "frame_source": 4294967297,
+          "has_missing_content": false,
+          "layer_tree_host_id": 1,
+          "scroll_state": "SCROLL_MAIN_THREAD",
+          "state": "STATE_PRESENTED_ALL",
+          "surface_frame_trace_id": -101
+        }
+      },
+      "cat": "cc,benchmark,disabled-by-default-devtools.timeline.frame",
+      "id2": { "local": "0x1" },
+      "name": "PipelineReporter",
+      "ph": "b",
+      "pid": 80,
+      "tid": 81,
+      "ts": 995000
+    },
+    {
+      "args": {},
+      "cat": "cc,benchmark,disabled-by-default-devtools.timeline.frame",
+      "id2": { "local": "0x1" },
+      "name": "PipelineReporter",
+      "ph": "e",
+      "pid": 80,
+      "tid": 81,
+      "ts": 1000000
+    },
+    {
+      "args": {},
+      "cat": "benchmark,viz,disabled-by-default-display.framedisplayed",
+      "name": "Display::FrameDisplayed",
+      "ph": "I",
+      "pid": 90,
+      "s": "t",
+      "tid": 91,
+      "ts": 1066668
+    },
+    {
+      "args": {},
+      "cat": "benchmark,viz,disabled-by-default-display.framedisplayed",
+      "name": "Display::FrameDisplayed",
+      "ph": "I",
+      "pid": 90,
+      "s": "t",
+      "tid": 91,
+      "ts": 1016667
+    },
+    {
+      "args": {},
+      "cat": "benchmark,viz,disabled-by-default-display.framedisplayed",
+      "name": "Display::FrameDisplayed",
+      "ph": "I",
+      "pid": 90,
+      "s": "t",
+      "tid": 91,
+      "ts": 1016667
+    },
+    {
+      "args": {
+        "frame_reporter": {
+          "checkerboarded_needs_raster": false,
+          "checkerboarded_needs_record": false,
+          "display_trace_id": 102,
+          "frame_sequence": 20,
+          "frame_source": 4294967297,
+          "has_missing_content": false,
+          "layer_tree_host_id": 1,
+          "scroll_state": "SCROLL_MAIN_THREAD",
+          "state": "STATE_PRESENTED_ALL",
+          "surface_frame_trace_id": -102
+        }
+      },
+      "cat": "cc,benchmark,disabled-by-default-devtools.timeline.frame",
+      "id2": { "local": "0x2" },
+      "name": "PipelineReporter",
+      "ph": "b",
+      "pid": 80,
+      "tid": 81,
+      "ts": 1000500
+    },
+    {
+      "args": {
+        "frame_reporter": {
+          "checkerboarded_needs_raster": false,
+          "checkerboarded_needs_record": false,
+          "display_trace_id": 102,
+          "frame_sequence": 21,
+          "frame_source": 4294967297,
+          "has_missing_content": false,
+          "layer_tree_host_id": 2,
+          "scroll_state": "SCROLL_MAIN_THREAD",
+          "state": "STATE_PRESENTED_ALL",
+          "surface_frame_trace_id": -202
+        }
+      },
+      "cat": "cc,benchmark,disabled-by-default-devtools.timeline.frame",
+      "id2": { "local": "0x2" },
+      "name": "PipelineReporter",
+      "ph": "b",
+      "pid": 80,
+      "tid": 82,
+      "ts": 1000600
+    },
+    {
+      "args": {},
+      "cat": "cc,benchmark,disabled-by-default-devtools.timeline.frame",
+      "id2": { "local": "0x2" },
+      "name": "PipelineReporter",
+      "ph": "e",
+      "pid": 80,
+      "tid": 82,
+      "ts": 1016667
+    },
+    {
+      "args": {},
+      "cat": "cc,benchmark,disabled-by-default-devtools.timeline.frame",
+      "id2": { "local": "0x2" },
+      "name": "PipelineReporter",
+      "ph": "e",
+      "pid": 80,
+      "tid": 81,
+      "ts": 1016667
+    },
+    {
+      "args": {},
+      "cat": "cc,benchmark,disabled-by-default-devtools.timeline.frame",
+      "id2": { "local": "0x3" },
+      "name": "PipelineReporter",
+      "ph": "e",
+      "pid": 80,
+      "tid": 81,
+      "ts": 1050001
+    },
+    {
+      "args": {
+        "frame_reporter": {
+          "checkerboarded_needs_raster": false,
+          "checkerboarded_needs_record": false,
+          "display_trace_id": 104,
+          "frame_sequence": 4,
+          "frame_source": 4294967297,
+          "has_missing_content": false,
+          "layer_tree_host_id": 1,
+          "scroll_state": "SCROLL_MAIN_THREAD",
+          "state": "STATE_PRESENTED_ALL",
+          "surface_frame_trace_id": -104
+        }
+      },
+      "cat": "cc,benchmark,disabled-by-default-devtools.timeline.frame",
+      "id2": { "local": "0x4" },
+      "name": "PipelineReporter",
+      "ph": "b",
+      "pid": 80,
+      "tid": 81,
+      "ts": 1055000
+    },
+    {
+      "args": {},
+      "cat": "cc,benchmark,disabled-by-default-devtools.timeline.frame",
+      "id2": { "local": "0x4" },
+      "name": "PipelineReporter",
+      "ph": "e",
+      "pid": 80,
+      "tid": 81,
+      "ts": 1066668
+    },
+    {
+      "args": {},
+      "cat": "benchmark,viz,disabled-by-default-display.framedisplayed",
+      "name": "Display::FrameDisplayed",
+      "ph": "I",
+      "pid": 90,
+      "s": "t",
+      "tid": 91,
+      "ts": 1050001
+    },
+    {
+      "args": {},
+      "cat": "devtools.timeline",
+      "name": "FireAnimationFrame",
+      "ph": "X",
+      "pid": 70,
+      "tid": 71,
+      "ts": 1005000
+    }
+  ],
+  "metadata": {
+    "clock-domain": "WIN_QPC",
+    "revision": "86e682ff10b168a25994de599ae5794936efe46a-refs/branch-heads/7871@{#3362}",
+    "trace_processor_stats": {
+      "interned_data_skipped_incremental_state_invalid": 0,
+      "json_parser_failure": 0,
+      "json_tokenizer_failure": 0,
+      "packet_skipped_seq_needs_incremental_state_invalid": 0,
+      "previous_packet_dropped_missing_sequence_id": 0,
+      "tokenizer_skipped_packets": 0,
+      "trace_packet_defaults_missing_sequence_id": 0,
+      "trace_sorter_negative_timestamp_dropped": 0,
+      "traced_chunks_discarded": 0,
+      "traced_final_flush_failed": 0,
+      "traced_patches_discarded": 0,
+      "track_event_dropped_packets_outside_of_range_of_interest": 0,
+      "track_event_missing_sequence_id": 0,
+      "track_event_missing_timestamp": 0,
+      "track_event_parser_errors": 0,
+      "track_event_tokenizer_errors": 0,
+      "traced_buf": [
+        {
+          "abi_violations": 0,
+          "bytes_overwritten": 0,
+          "chunks_discarded": 0,
+          "chunks_overwritten": 0,
+          "incremental_sequences_dropped": 0,
+          "patches_failed": 0,
+          "sequence_packet_loss": 0,
+          "trace_writer_packet_loss": 0
+        }
+      ]
+    },
+    "user-agent": "Mozilla/5.0 HeadlessChrome/150.0.0.0 Safari/537.36"
+  }
+}

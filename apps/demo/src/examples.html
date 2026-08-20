@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light">
+    <title>BOM 编辑器示例中心</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/guide.css">
+    <script type="importmap">
+      {
+        "imports": {
+          "@bom-editor/benchmark-fixtures": "/benchmarks/fixtures/dist/index.js",
+          "@bom-editor/contracts": "/packages/contracts/dist/index.js",
+          "@qkplm/bom-editor": "/packages/core/dist/index.js",
+          "@bom-editor/datasource": "/packages/datasource/dist/index.js",
+          "@bom-editor/editor": "/packages/editor/dist/index.js",
+          "@bom-editor/model": "/packages/model/dist/index.js",
+          "@qkplm/bom-editor-react": "/packages/react/dist/index.js",
+          "@bom-editor/renderer-canvas": "/packages/renderer-canvas/dist/index.js",
+          "@bom-editor/runtime": "/packages/runtime/dist/index.js",
+          "@bom-editor/transaction": "/packages/transaction/dist/index.js",
+          "@qkplm/bom-editor-umd": "/packages/umd/dist/index.js",
+          "@qkplm/bom-editor-vue": "/packages/vue/dist/index.js",
+          "@bom-editor/visible-projection": "/packages/visible-projection/dist/index.js"
+        }
+      }
+    </script>
+  </head>
+  <body class="docs-page examples-page">
+    <div class="docs-shell">
+      <header class="docs-header">
+        <a class="docs-brand" href="/" aria-label="返回 BOM 编辑器工作台">
+          <span class="docs-brand-rule" aria-hidden="true"></span>
+          <span>
+            <strong>BOM 编辑器</strong>
+            <small>可复用组件示例中心</small>
+          </span>
+        </a>
+        <nav class="docs-nav workspace-tabs" role="tablist" aria-label="BOM 编辑器页面">
+          <a class="workspace-tab" role="tab" aria-selected="false" href="/">工作台</a>
+          <a class="workspace-tab is-active" role="tab" aria-selected="true" aria-current="page" href="/examples.html">示例中心</a>
+          <a class="workspace-tab" role="tab" aria-selected="false" href="/help.html">帮助文档</a>
+        </nav>
+      </header>
+
+      <main class="docs-main">
+        <section class="docs-intro">
+          <p class="docs-eyebrow">PUBLIC API PLAYGROUND</p>
+          <h1>BOM 编辑器示例中心</h1>
+          <p>每个示例都围绕一个公开组件能力组织。切换示例后，可在同一组页签中查看说明、输入数据、输出数据和可复制的代码使用方式。</p>
+          <div class="docs-intro-actions">
+            <a class="docs-primary-link" href="/">打开可编辑工作台</a>
+            <a class="docs-secondary-link" href="/help.html">阅读使用帮助</a>
+          </div>
+        </section>
+
+        <section class="examples-layout" aria-label="组件示例">
+          <aside class="example-index" aria-label="示例目录">
+            <div class="example-index-heading">
+              <span>示例目录</span>
+              <small data-example-count>5 个公开 API 场景</small>
+            </div>
+            <button class="example-index-item is-active" type="button" data-example-target="mount">
+              <span class="example-index-number">01</span>
+              <span><strong>创建受控编辑器</strong><small>Props / Outputs / mount</small></span>
+            </button>
+            <button class="example-index-item" type="button" data-example-target="edit">
+              <span class="example-index-number">02</span>
+              <span><strong>提交字段编辑</strong><small>Command / Commit / Undo</small></span>
+            </button>
+            <button class="example-index-item" type="button" data-example-target="view">
+              <span class="example-index-number">03</span>
+              <span><strong>控制列视图</strong><small>Column / Freeze / viewChanged</small></span>
+            </button>
+            <button class="example-index-item" type="button" data-example-target="search">
+              <span class="example-index-number">04</span>
+              <span><strong>查找与格式化</strong><small>Query / Match / Display</small></span>
+            </button>
+            <button class="example-index-item" type="button" data-example-target="clipboard">
+              <span class="example-index-number">05</span>
+              <span><strong>安全复制粘贴</strong><small>Policy / Paste / Audit</small></span>
+            </button>
+            <div class="example-index-note">
+              <strong>提示</strong>
+              <p>输入页签中的 JSON 可直接修改。点击“运行示例”后，输出页签会显示根据当前输入生成的协议结果。</p>
+            </div>
+          </aside>
+
+          <div class="example-stage">
+            <article class="example-view is-active" data-example-view="mount">
+              <header class="example-view-header">
+                <div>
+                  <p class="docs-eyebrow">01 / COMPONENT FACADE</p>
+                  <h2>创建受控编辑器</h2>
+                  <p>使用纯前端 Props/Outputs 门面挂载编辑器，宿主只负责提供文档、列定义和输出回调。</p>
+                </div>
+                <span class="example-status" data-example-status>可运行</span>
+              </header>
+              <div class="example-tabs" role="tablist" aria-label="创建受控编辑器示例页签">
+                <button class="example-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="mount-overview" data-tab-target="mount-overview">说明</button>
+                <button class="example-tab" type="button" role="tab" aria-selected="false" aria-controls="mount-input" data-tab-target="mount-input">输入数据</button>
+                <button class="example-tab" type="button" role="tab" aria-selected="false" aria-controls="mount-output" data-tab-target="mount-output">输出数据</button>
+                <button class="example-tab" type="button" role="tab" aria-selected="false" aria-controls="mount-code" data-tab-target="mount-code">代码示例</button>
+              </div>
+              <section class="example-panel is-active" id="mount-overview" role="tabpanel">
+                <div class="overview-grid">
+                  <div><span class="overview-label">输入</span><strong>BomSchema + Snapshot + 列定义</strong><p>Schema、文档和列定义共同构成受控初始化输入，交互结果通过 outputs 输出。</p></div>
+                  <div><span class="overview-label">过程</span><strong>规范化 → 挂载 → ready</strong><p>组件先验证 Snapshot，再同步 Canvas、语义 DOM 和编辑 Portal。</p></div>
+                  <div><span class="overview-label">结果</span><strong>ready / selectionChanged</strong><p>宿主接收值无关的状态事件，不需要依赖 renderer 内部对象。</p></div>
+                </div>
+                <div class="example-editor-host" data-example-editor-host="mount" aria-label="创建受控编辑器实例"></div>
+                <button class="run-example" type="button" data-run-example="mount">运行示例</button>
+              </section>
+              <section class="example-panel" id="mount-input" role="tabpanel" hidden>
+                <label class="json-label" for="mount-input-data">场景输入 JSON（可修改）</label>
+                <textarea class="json-editor" id="mount-input-data" data-example-input="mount" spellcheck="false">{
+  "schema": {
+    "schemaVersion": "demo-schema-v1",
+    "fields": [
+      {
+        "fieldId": "materialCode",
+        "path": ["materialCode"],
+        "type": { "kind": "string", "maxLength": 64 },
+        "required": true,
+        "nullable": false
+      },
+      {
+        "fieldId": "quantity",
+        "path": ["specification", "quantity"],
+        "type": { "kind": "integer", "min": "0", "max": "100000" },
+        "required": false,
+        "nullable": false
+      }
+    ],
+    "allowAdditionalFields": false,
+    "recommendedDepth": 3,
+    "maximumDepth": 6,
+    "canonicalizationVersion": "bom-canonical-v1",
+    "contentHashAlgorithm": "SHA-256"
+  },
+  "document": {
+    "schemaVersion": "demo-schema-v1",
+    "documentId": "demo-bom",
+    "revision": "1",
+    "positionKeyCodecVersion": "lexicographic-ascii-v1",
+    "completeness": "complete",
+    "knownRootCount": 1,
+    "roots": ["occ-0001"],
+    "nodes": [
+      {
+        "occurrenceId": "occ-0001",
+        "kind": "material",
+        "materialId": "material-001",
+        "materialCode": "PUMP-001",
+        "parentId": null,
+        "positionKey": "A",
+        "fields": {
+          "materialCode": "PUMP-001",
+          "specification": { "quantity": 12 }
+        }
+      }
+    ]
+  },
+  "columns": [
+    {
+      "columnId": "materialCode",
+      "fieldName": "materialCode",
+      "fieldPath": ["materialCode"],
+      "label": "物料编码",
+      "width": 140,
+      "editable": true,
+      "frozen": "start",
+      "visible": true,
+      "format": { "kind": "text" }
+    },
+    {
+      "columnId": "quantity",
+      "fieldName": "quantity",
+      "fieldPath": ["specification", "quantity"],
+      "label": "数量",
+      "width": 100,
+      "minWidth": 80,
+      "maxWidth": 240,
+      "editable": true,
+      "frozen": false,
+      "visible": true,
+      "alignment": "end",
+      "format": { "kind": "integer", "useGrouping": true }
+    }
+  ],
+  "instanceId": "demo-component",
+  "protocolVersion": "bom-editor-component/v1",
+  "initialView": {
+    "rowHeight": 30,
+    "columns": [
+      { "columnId": "materialCode", "width": 140, "frozen": "start", "visible": true },
+      { "columnId": "quantity", "width": 116, "frozen": false, "visible": true }
+    ],
+    "expandedIds": ["occ-0001"],
+    "expandAll": false,
+    "selection": {
+      "activeCell": { "occurrenceId": "occ-0001", "columnId": "materialCode" },
+      "range": null
+    },
+    "scrollLeft": 0,
+    "scrollTop": 0
+  },
+  "history": { "maxEntries": 100, "maxBytes": 1048576 },
+  "pasteLimits": { "maxRows": 1000, "maxColumns": 32, "maxCells": 10000 },
+  "editNavigation": { "enter": "down", "tab": "next-editable" },
+  "shortcuts": {
+    "sequenceTimeoutMs": 1000,
+    "bindings": []
+  },
+  "diffView": null,
+  "outputs": ["onDocumentChange", "onSelectionChange", "onViewChange", "onError"]
+}</textarea>
+                <button class="run-example" type="button" data-run-example="mount">运行示例</button>
+              </section>
+              <section class="example-panel" id="mount-output" role="tabpanel" hidden>
+                <div class="output-heading"><span>当前输入生成的场景结果</span><span class="output-kind">component-output</span></div>
+                <pre class="json-output" data-example-output="mount">点击“运行示例”查看输出</pre>
+              </section>
+              <section class="example-panel" id="mount-code" role="tabpanel" hidden>
+                <div class="code-heading"><span>TypeScript</span><button class="copy-code" type="button" data-copy-code="mount-code-block">复制代码</button></div>
+                <pre class="code-output" id="mount-code-block"><code>import { createBomEditorComponent } from '@qkplm/bom-editor';
+
+const component = createBomEditorComponent({
+  schema,
+  document: snapshot,
+  columns,
+  initialView: {
+    rowHeight: 30,
+    columns: [
+      { columnId: 'materialCode', width: 140, frozen: 'start', visible: true },
+      { columnId: 'quantity', width: 116, frozen: false, visible: true },
+    ],
+    expandedIds: ['occ-0001'],
+    selection: {
+      activeCell: { occurrenceId: 'occ-0001', columnId: 'materialCode' },
+      range: null,
+    },
+    scrollLeft: 0,
+    scrollTop: 0,
+  },
+  editNavigation: { enter: 'down', tab: 'next-editable' },
+  outputs: {
+    onDocumentChange: ({ snapshot, commit }) =&gt; save(snapshot, commit),
+    onSelectionChange: (event) =&gt; announce(event.selection),
+    onViewChange: (event) =&gt; persistView(event.view),
+    onError: (event) =&gt; report(event.error.code),
+  },
+});
+
+component.mount(document.querySelector('#editor')!);</code></pre>
+              </section>
+            </article>
+
+            <article class="example-view" data-example-view="edit" hidden>
+              <header class="example-view-header">
+                <div><p class="docs-eyebrow">02 / TRANSACTION</p><h2>提交字段编辑</h2><p>用公开命令修改字段，得到单一原子 Commit，并可通过 Undo 恢复规范 Snapshot。</p></div>
+                <span class="example-status" data-example-status>可运行</span>
+              </header>
+              <div class="example-tabs" role="tablist" aria-label="提交字段编辑示例页签">
+                <button class="example-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="edit-overview" data-tab-target="edit-overview">说明</button>
+                <button class="example-tab" type="button" role="tab" aria-selected="false" aria-controls="edit-input" data-tab-target="edit-input">输入数据</button>
+                <button class="example-tab" type="button" role="tab" aria-selected="false" aria-controls="edit-output" data-tab-target="edit-output">输出数据</button>
+                <button class="example-tab" type="button" role="tab" aria-selected="false" aria-controls="edit-code" data-tab-target="edit-code">代码示例</button>
+              </div>
+              <section class="example-panel is-active" id="edit-overview" role="tabpanel"><div class="overview-grid"><div><span class="overview-label">命令</span><strong>setField</strong><p>通过 occurrenceId 和 Schema fieldPath 定位字段，禁止直接写对象属性。</p></div><div><span class="overview-label">事务</span><strong>FIFO + 原子提交</strong><p>beforeTransaction、Schema 和 revision 校验全部通过后才发布。</p></div><div><span class="overview-label">历史</span><strong>Undo / Redo</strong><p>Commit 保留前后选区和规范哈希，撤销不会产生半提交。</p></div></div><div class="example-editor-host" data-example-editor-host="edit" aria-label="提交字段编辑实例"></div><button class="run-example" type="button" data-run-example="edit">运行示例</button></section>
+              <section class="example-panel" id="edit-input" role="tabpanel" hidden><label class="json-label" for="edit-input-data">场景输入 JSON（可修改）</label><textarea class="json-editor" id="edit-input-data" data-example-input="edit" spellcheck="false">{
+  "baseRevision": 41,
+  "type": "setField",
+  "occurrenceId": "occ-0007",
+  "fieldPath": "specification.quantity",
+  "beforeValue": 12,
+  "value": 24,
+  "origin": "demo:quantity-edit"
+}</textarea><button class="run-example" type="button" data-run-example="edit">运行示例</button></section>
+              <section class="example-panel" id="edit-output" role="tabpanel" hidden><div class="output-heading"><span>当前输入生成的场景结果</span><span class="output-kind">transactionCommitted</span></div><pre class="json-output" data-example-output="edit">点击“运行示例”查看输出</pre></section>
+              <section class="example-panel" id="edit-code" role="tabpanel" hidden><div class="code-heading"><span>TypeScript</span><button class="copy-code" type="button" data-copy-code="edit-code-block">复制代码</button></div><pre class="code-output" id="edit-code-block"><code>const result = await editor.execute(
+  {
+    type: 'setField',
+    occurrenceId: 'occ-0007',
+    fieldPath: 'specification.quantity',
+    value: 24,
+  },
+  { origin: 'demo:quantity-edit' },
+);
+
+if (result.ok) {
+  console.log(result.value.commit.transactionId);
+  await editor.undo({ origin: 'demo:undo' });
+}</code></pre></section>
+            </article>
+
+            <article class="example-view" data-example-view="view" hidden>
+              <header class="example-view-header"><div><p class="docs-eyebrow">03 / CONTROLLED VIEW</p><h2>控制列视图</h2><p>列宽、自动适应、顺序、显隐和冻结属于受控视图状态，通过 viewChanged 输出，不修改 BOM 文档。</p></div><span class="example-status" data-example-status>可运行</span></header>
+              <div class="example-tabs" role="tablist" aria-label="控制列视图示例页签"><button class="example-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="view-overview" data-tab-target="view-overview">说明</button><button class="example-tab" type="button" role="tab" aria-selected="false" aria-controls="view-input" data-tab-target="view-input">输入数据</button><button class="example-tab" type="button" role="tab" aria-selected="false" aria-controls="view-output" data-tab-target="view-output">输出数据</button><button class="example-tab" type="button" role="tab" aria-selected="false" aria-controls="view-code" data-tab-target="view-code">代码示例</button></div>
+              <section class="example-panel is-active" id="view-overview" role="tabpanel"><div class="overview-grid"><div><span class="overview-label">调整</span><strong>width / auto-size / order</strong><p>拖动或双击列边界，或使用列头菜单自动适应；宿主收到稳定列 ID 和新几何。</p></div><div><span class="overview-label">冻结</span><strong>start / end / false</strong><p>冻结列不会改变数据顺序，滚动时保持固定坐标。</p></div><div><span class="overview-label">历史</span><strong>交互 Undo / Redo</strong><p>视图变化进入交互历史，领域 Snapshot revision 保持不变。</p></div></div><div class="example-editor-host" data-example-editor-host="view" aria-label="控制列视图实例"></div><button class="run-example" type="button" data-run-example="view">运行示例</button></section>
+              <section class="example-panel" id="view-input" role="tabpanel" hidden><label class="json-label" for="view-input-data">场景输入 JSON（可修改）</label><textarea class="json-editor" id="view-input-data" data-example-input="view" spellcheck="false">{
+  "baseViewRevision": 7,
+  "columnId": "quantity",
+  "width": 128,
+  "order": 2,
+  "visible": true,
+  "frozen": "start"
+}</textarea><button class="run-example" type="button" data-run-example="view">运行示例</button></section>
+              <section class="example-panel" id="view-output" role="tabpanel" hidden><div class="output-heading"><span>当前输入生成的场景结果</span><span class="output-kind">viewChanged</span></div><pre class="json-output" data-example-output="view">点击“运行示例”查看输出</pre></section>
+              <section class="example-panel" id="view-code" role="tabpanel" hidden><div class="code-heading"><span>TypeScript</span><button class="copy-code" type="button" data-copy-code="view-code-block">复制代码</button></div><pre class="code-output" id="view-code-block"><code>const nextColumns = columns.map((column) =&gt;
+  column.columnId === 'quantity'
+    ? { ...column, width: 128, frozen: 'start' }
+    : column,
+);
+
+const result = editor.setColumns(nextColumns);
+if (!result.ok) report(result.error);
+// outputs.viewChanged 会携带稳定列 ID 和 viewRevision。</code></pre></section>
+            </article>
+
+            <article class="example-view" data-example-view="search" hidden>
+              <header class="example-view-header"><div><p class="docs-eyebrow">04 / QUERY &amp; FORMAT</p><h2>查找与格式化</h2><p>查找请求只返回稳定地址和计数；列显示格式只影响展示，不改变规范值。</p></div><span class="example-status" data-example-status>可运行</span></header>
+              <div class="example-tabs" role="tablist" aria-label="查找与格式化示例页签"><button class="example-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="search-overview" data-tab-target="search-overview">说明</button><button class="example-tab" type="button" role="tab" aria-selected="false" aria-controls="search-input" data-tab-target="search-input">输入数据</button><button class="example-tab" type="button" role="tab" aria-selected="false" aria-controls="search-output" data-tab-target="search-output">输出数据</button><button class="example-tab" type="button" role="tab" aria-selected="false" aria-controls="search-code" data-tab-target="search-code">代码示例</button></div>
+              <section class="example-panel is-active" id="search-overview" role="tabpanel"><div class="overview-grid"><div><span class="overview-label">模式</span><strong>prefix / exact / fuzzy / regex</strong><p>正则输入会先编译校验，非法表达式不会改变当前文档。</p></div><div><span class="overview-label">结果</span><strong>count + addresses</strong><p>结果只携带 occurrenceId、columnId 和 rowIndex，不泄露字段原文。</p></div><div><span class="overview-label">格式</span><strong>Intl 展示层</strong><p>百分比、货币和日期格式在 view 层渲染，规范值保持稳定。</p></div></div><div class="example-editor-host" data-example-editor-host="search" aria-label="查找与格式化实例"></div><button class="run-example" type="button" data-run-example="search">运行示例</button></section>
+              <section class="example-panel" id="search-input" role="tabpanel" hidden><label class="json-label" for="search-input-data">场景输入 JSON（可修改）</label><textarea class="json-editor" id="search-input-data" data-example-input="search" spellcheck="false">{
+  "query": "PUMP-",
+  "mode": "prefix",
+  "caseSensitive": false,
+  "matchWholeCell": false,
+  "rows": [
+    { "occurrenceId": "occ-0001", "values": { "materialCode": "PUMP-001", "name": "泵体总成" } },
+    { "occurrenceId": "occ-0007", "values": { "materialCode": "PUMP-002", "name": "密封组件" } },
+    { "occurrenceId": "occ-0024", "values": { "materialCode": "VALVE-024", "name": "阀体" } }
+  ],
+  "format": { "kind": "currency", "currency": "CNY", "maximumFractionDigits": 2 }
+}</textarea><button class="run-example" type="button" data-run-example="search">运行示例</button></section>
+              <section class="example-panel" id="search-output" role="tabpanel" hidden><div class="output-heading"><span>当前输入生成的场景结果</span><span class="output-kind">queryResult</span></div><pre class="json-output" data-example-output="search">点击“运行示例”查看输出</pre></section>
+              <section class="example-panel" id="search-code" role="tabpanel" hidden><div class="code-heading"><span>TypeScript</span><button class="copy-code" type="button" data-copy-code="search-code-block">复制代码</button></div><pre class="code-output" id="search-code-block"><code>const result = await editor.search({
+  query: 'PUMP-',
+  mode: 'prefix',
+  caseSensitive: false,
+});
+
+editor.setColumns(columns.map((column) =&gt;
+  column.columnId === 'price'
+    ? { ...column, format: { kind: 'currency', currency: 'CNY' } }
+    : column,
+));</code></pre></section>
+            </article>
+
+            <article class="example-view" data-example-view="clipboard" hidden>
+              <header class="example-view-header"><div><p class="docs-eyebrow">05 / CLIPBOARD POLICY</p><h2>安全复制粘贴</h2><p>剪贴板经过声明式 Policy 和格式限额检查，成功后才进入单一可撤销事务。</p></div><span class="example-status" data-example-status>可运行</span></header>
+              <div class="example-tabs" role="tablist" aria-label="安全复制粘贴示例页签"><button class="example-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="clipboard-overview" data-tab-target="clipboard-overview">说明</button><button class="example-tab" type="button" role="tab" aria-selected="false" aria-controls="clipboard-input" data-tab-target="clipboard-input">输入数据</button><button class="example-tab" type="button" role="tab" aria-selected="false" aria-controls="clipboard-output" data-tab-target="clipboard-output">输出数据</button><button class="example-tab" type="button" role="tab" aria-selected="false" aria-controls="clipboard-code" data-tab-target="clipboard-code">代码示例</button></div>
+              <section class="example-panel is-active" id="clipboard-overview" role="tabpanel"><div class="overview-grid"><div><span class="overview-label">来源</span><strong>internal / html / text</strong><p>可输入三种候选表示；失效的高优先级候选会继续安全降级。</p></div><div><span class="overview-label">诊断</span><strong>candidateFormat</strong><p>全部候选失败时，输出按来源格式汇总的无值定位诊断。</p></div><div><span class="overview-label">提交</span><strong>one paste transaction</strong><p>解析、目标复核和 Schema 转换完成后一次性提交，失败保持 Snapshot 不变。</p></div></div><div class="example-editor-host" data-example-editor-host="clipboard" aria-label="安全复制粘贴实例"></div><button class="run-example" type="button" data-run-example="clipboard">运行示例</button></section>
+              <section class="example-panel" id="clipboard-input" role="tabpanel" hidden><label class="json-label" for="clipboard-input-data">场景输入 JSON（可修改）</label><textarea class="json-editor" id="clipboard-input-data" data-example-input="clipboard" spellcheck="false">{
+  "representation": "text/plain",
+  "candidates": {
+    "internal": "{\"format\":\"bom-editor/clipboard\",\"version\":2,\"kind\":\"cell-grid-text\",\"rows\":[[\"unsupported\"]]}",
+    "html": "<div>not a table</div>"
+  },
+  "rows": [["PUMP-101"], ["PUMP-102"], ["=SUM(A1:A2)"]],
+  "target": { "rowIndex": 4, "columnIndex": 0 },
+  "policy": { "formulaProtection": "safe", "maxCells": 10000 }
+}</textarea><button class="run-example" type="button" data-run-example="clipboard">运行示例</button></section>
+              <section class="example-panel" id="clipboard-output" role="tabpanel" hidden><div class="output-heading"><span>当前输入生成的场景结果</span><span class="output-kind">pasteOperation</span></div><pre class="json-output" data-example-output="clipboard">点击“运行示例”查看输出</pre></section>
+              <section class="example-panel" id="clipboard-code" role="tabpanel" hidden><div class="code-heading"><span>TypeScript</span><button class="copy-code" type="button" data-copy-code="clipboard-code-block">复制代码</button></div><pre class="code-output" id="clipboard-code-block"><code>const preview = await component.previewPaste({
+  internal: internalCandidate,
+  html: htmlCandidate,
+  text: plainText,
+});
+
+if (!preview.ok) {
+  renderDiagnostics(preview.diagnostics); // 每项可带 candidateFormat
+}
+
+// 浏览器可信 paste 事件会把三种 MIME 一起交给组件；
+// 成功或拒绝均从 onPaste 输出读取。</code></pre></section>
+            </article>
+          </div>
+        </section>
+      </main>
+      <footer class="docs-footer"><span>每次运行都会重新读取输入 JSON 并生成场景结果；生产环境仍需接入宿主校验和真实 DataSource。</span><a href="/help.html">查看完整帮助</a></footer>
+    </div>
+    <script type="module" src="/examples.js"></script>
+  </body>
+</html>

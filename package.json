@@ -1,0 +1,50 @@
+{
+  "name": "aibom-editor-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "description": "QKPLM BOM Editor SDK workspace",
+  "license": "Apache-2.0",
+  "author": "QKPLM",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wcker/qkplm-bom-editor.git"
+  },
+  "homepage": "https://github.com/wcker/qkplm-bom-editor",
+  "bugs": {
+    "url": "https://github.com/wcker/qkplm-bom-editor/issues"
+  },
+  "packageManager": "pnpm@11.8.0",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=11.8.0"
+  },
+  "scripts": {
+    "check:docs": "node scripts/check-docs.mjs",
+    "changeset": "changeset",
+    "version:packages": "changeset version",
+    "release:verify": "node scripts/release-verify.mjs",
+    "test:browser-release": "node scripts/browser-release-smoke.mjs",
+    "check:api": "pnpm --filter @qkplm/bom-editor api:check",
+    "api:update": "pnpm --filter @qkplm/bom-editor api:update",
+    "benchmark:f3:headless": "pnpm --filter @bom-editor/benchmark-scenarios test",
+    "benchmark:f4:headless": "pnpm run build && pnpm --filter @bom-editor/benchmark-scenarios benchmark:f4:headless",
+    "test:e2e:f3": "pnpm run build && pnpm --filter @bom-editor/benchmark-scenarios benchmark:f3:browser:smoke",
+    "benchmark:f3:browser": "pnpm run build && pnpm --filter @bom-editor/benchmark-scenarios benchmark:f3:browser:formal",
+    "verify:f3": "pnpm run check && pnpm run benchmark:f3:browser",
+    "test:property": "pnpm --filter @bom-editor/property-gate test",
+    "f2:coverage": "node scripts/check-f2-coverage.mjs",
+    "build": "pnpm --recursive --workspace-concurrency=1 --if-present run build",
+    "typecheck": "pnpm --recursive --workspace-concurrency=1 --if-present run typecheck",
+    "test": "pnpm --recursive --workspace-concurrency=1 --if-present run test",
+    "check": "pnpm run check:docs && pnpm run typecheck && pnpm run test && pnpm run build && pnpm run check:api && pnpm run f2:coverage"
+  },
+  "devDependencies": {
+    "@changesets/cli": "3.0.1",
+    "@microsoft/api-extractor": "7.58.11",
+    "@rollup/plugin-node-resolve": "16.0.3",
+    "@rollup/plugin-terser": "1.0.0",
+    "playwright-core": "1.61.1",
+    "rollup": "4.62.4",
+    "typescript": "5.9.3"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "extends": "../../api-extractor.base.json",
+  "mainEntryPointFilePath": "<projectFolder>/.build/model.d.ts",
+  "bundledPackages": [
+    "@bom-editor/model"
+  ],
+  "apiReport": {
+    "reportFileName": "core-model"
+  }
+}

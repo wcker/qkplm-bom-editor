@@ -1,0 +1,10 @@
+export type OccurrenceId = string;
+export type RevisionToken = string;
+export type BomDocumentId = string;
+export type BomTransactionId = string;
+export type BomInstanceId = string;
+export type BomRequestId = string;
+export type BomWorkerTaskId = string;
+export type BomPluginId = string;
+export type BomProtocolVersion = string;
+export type BomDocumentGeneration = number;

@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@bom-editor/contracts": [
+        "../contracts/dist/index.d.ts"
+      ],
+      "@bom-editor/model": [
+        "../model/dist/index.d.ts"
+      ]
+    },
+    "rootDir": "src",
+    "outDir": "dist",
+    "types": [],
+    "lib": [
+      "ES2022"
+    ]
+  },
+  "include": [
+    "src/**/*.ts"
+  ]
+}

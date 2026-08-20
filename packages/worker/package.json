@@ -1,0 +1,32 @@
+{
+  "name": "@bom-editor/worker",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Bounded shared Worker runtime with cancellation, fairness, recovery, and main-thread fallback.",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "clean": "node scripts/clean-dist.mjs",
+    "build": "pnpm run clean && tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.typecheck.json",
+    "test": "pnpm run build && node --test --test-isolation=none test/worker-pool.test.mjs"
+  },
+  "dependencies": {
+    "@bom-editor/contracts": "workspace:*"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

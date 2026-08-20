@@ -1,0 +1,311 @@
+{
+  "fixtureVersion": "bom-stable-key-diff/v1",
+  "schema": {
+    "schemaVersion": "2.1.0",
+    "fields": [
+      {
+        "fieldId": "name",
+        "path": ["name"],
+        "type": { "kind": "string", "maxLength": 200 },
+        "required": true,
+        "nullable": false
+      },
+      {
+        "fieldId": "description",
+        "path": ["description"],
+        "type": { "kind": "string", "maxLength": 500 },
+        "required": false,
+        "nullable": false
+      },
+      {
+        "fieldId": "quantity",
+        "path": ["quantity"],
+        "type": {
+          "kind": "decimal",
+          "maxScale": 3,
+          "roundingMode": "halfEven",
+          "unitFamily": "quantity"
+        },
+        "required": false,
+        "nullable": false
+      },
+      {
+        "fieldId": "category",
+        "path": ["meta", "category"],
+        "type": { "kind": "enum", "values": ["raw", "assembly"] },
+        "required": false,
+        "nullable": false
+      }
+    ],
+    "allowAdditionalFields": true,
+    "recommendedDepth": 8,
+    "maximumDepth": 64,
+    "canonicalizationVersion": "1",
+    "contentHashAlgorithm": "SHA-256"
+  },
+  "source": {
+    "schemaVersion": "2.1.0",
+    "documentId": "golden-document",
+    "revision": "golden-source-r1",
+    "sourceRevision": "remote-r8",
+    "positionKeyCodecVersion": "lexicographic-ascii-v1",
+    "completeness": "complete",
+    "roots": ["root-a", "root-z"],
+    "nodes": [
+      {
+        "occurrenceId": "child-delete",
+        "kind": "material",
+        "materialCode": "SHARED-CODE",
+        "parentId": "root-a",
+        "positionKey": "M",
+        "fields": { "name": "Removed occurrence" }
+      },
+      {
+        "occurrenceId": "root-z",
+        "kind": "group",
+        "parentId": null,
+        "positionKey": "Z",
+        "fields": { "name": "Obsolete root" }
+      },
+      {
+        "occurrenceId": "grandchild",
+        "kind": "material",
+        "materialCode": "GRAND-001",
+        "parentId": "child-move",
+        "positionKey": "A",
+        "fields": {
+          "name": "Grandchild",
+          "quantity": { "$type": "decimal", "value": "3.000", "unit": "pcs" }
+        }
+      },
+      {
+        "occurrenceId": "root-a",
+        "kind": "group",
+        "parentId": null,
+        "positionKey": "A",
+        "fields": {
+          "name": "Main assembly",
+          "description": "before",
+          "meta": { "category": "assembly" },
+          "extension": { "flag": true, "nested": { "value": 1 } }
+        }
+      },
+      {
+        "occurrenceId": "child-move",
+        "kind": "group",
+        "parentId": "root-a",
+        "positionKey": "z",
+        "fields": { "name": "Moved group" }
+      },
+      {
+        "occurrenceId": "child-keep",
+        "kind": "material",
+        "materialId": "material-keep-v1",
+        "materialRevision": "revision-1",
+        "materialCode": "KEEP-001",
+        "parentId": "root-a",
+        "positionKey": "A",
+        "fields": {
+          "name": "Retained occurrence",
+          "quantity": { "$type": "decimal", "value": "1.000", "unit": "pcs" },
+          "meta": { "category": "raw" }
+        }
+      }
+    ]
+  },
+  "target": {
+    "schemaVersion": "2.1.0",
+    "documentId": "golden-document",
+    "revision": "golden-target-r2",
+    "sourceRevision": "remote-r9",
+    "positionKeyCodecVersion": "lexicographic-ascii-v1",
+    "completeness": "complete",
+    "roots": ["root-a", "child-move"],
+    "nodes": [
+      {
+        "occurrenceId": "grandchild",
+        "kind": "material",
+        "materialCode": "GRAND-001",
+        "parentId": "child-move",
+        "positionKey": "A",
+        "fields": {
+          "name": "Grandchild",
+          "quantity": { "$type": "decimal", "value": "3.000", "unit": "pcs" }
+        }
+      },
+      {
+        "occurrenceId": "child-keep",
+        "kind": "material",
+        "materialId": "material-keep-v2",
+        "materialRevision": "revision-2",
+        "materialCode": "KEEP-002",
+        "parentId": "root-a",
+        "positionKey": "Y",
+        "fields": {
+          "name": "Retained occurrence",
+          "quantity": { "$type": "decimal", "value": "2.500", "unit": "pcs" },
+          "meta": { "category": "raw" }
+        }
+      },
+      {
+        "occurrenceId": "child-move",
+        "kind": "group",
+        "parentId": null,
+        "positionKey": "M",
+        "fields": { "name": "Moved group" }
+      },
+      {
+        "occurrenceId": "child-insert",
+        "kind": "material",
+        "materialCode": "SHARED-CODE",
+        "parentId": "root-a",
+        "positionKey": "B",
+        "fields": {
+          "name": "Inserted occurrence",
+          "quantity": { "$type": "decimal", "value": "0.500", "unit": "pcs" }
+        }
+      },
+      {
+        "occurrenceId": "root-a",
+        "kind": "group",
+        "parentId": null,
+        "positionKey": "A",
+        "fields": {
+          "name": "Main assembly v2",
+          "meta": { "category": "raw" },
+          "extension": { "flag": true, "nested": { "value": 2 } }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "schemaVersion": "2.1.0",
+    "documentId": "golden-document",
+    "sourceRevision": "golden-source-r1",
+    "targetRevision": "golden-target-r2",
+    "positionKeyCodecVersion": "lexicographic-ascii-v1",
+    "changes": [
+      {
+        "type": "delete",
+        "node": {
+          "occurrenceId": "child-delete",
+          "kind": "material",
+          "materialCode": "SHARED-CODE",
+          "parentId": "root-a",
+          "positionKey": "M",
+          "childrenState": "complete",
+          "knownChildCount": 0,
+          "fields": { "name": "Removed occurrence" }
+        }
+      },
+      {
+        "type": "delete",
+        "node": {
+          "occurrenceId": "root-z",
+          "kind": "group",
+          "parentId": null,
+          "positionKey": "Z",
+          "childrenState": "complete",
+          "knownChildCount": 0,
+          "fields": { "name": "Obsolete root" }
+        }
+      },
+      {
+        "type": "insert",
+        "node": {
+          "occurrenceId": "child-insert",
+          "kind": "material",
+          "materialCode": "SHARED-CODE",
+          "parentId": "root-a",
+          "positionKey": "B",
+          "childrenState": "complete",
+          "knownChildCount": 0,
+          "fields": {
+            "name": "Inserted occurrence",
+            "quantity": { "$type": "decimal", "value": "0.500", "unit": "pcs" }
+          }
+        }
+      },
+      {
+        "type": "move",
+        "occurrenceId": "child-move",
+        "beforeParentId": "root-a",
+        "afterParentId": null,
+        "beforePositionKey": "z",
+        "afterPositionKey": "M"
+      },
+      {
+        "type": "reorder",
+        "occurrenceId": "child-keep",
+        "parentId": "root-a",
+        "beforePositionKey": "A",
+        "afterPositionKey": "Y"
+      },
+      {
+        "type": "material",
+        "occurrenceId": "child-keep",
+        "before": {
+          "materialId": "material-keep-v1",
+          "materialRevision": "revision-1",
+          "materialCode": "KEEP-001"
+        },
+        "after": {
+          "materialId": "material-keep-v2",
+          "materialRevision": "revision-2",
+          "materialCode": "KEEP-002"
+        }
+      },
+      {
+        "type": "field",
+        "occurrenceId": "root-a",
+        "fieldId": "description",
+        "fieldPath": ["description"],
+        "before": { "present": true, "value": "before" },
+        "after": { "present": false }
+      },
+      {
+        "type": "field",
+        "occurrenceId": "root-a",
+        "fieldPath": ["extension"],
+        "before": {
+          "present": true,
+          "value": { "flag": true, "nested": { "value": 1 } }
+        },
+        "after": {
+          "present": true,
+          "value": { "flag": true, "nested": { "value": 2 } }
+        }
+      },
+      {
+        "type": "field",
+        "occurrenceId": "root-a",
+        "fieldId": "category",
+        "fieldPath": ["meta", "category"],
+        "before": { "present": true, "value": "assembly" },
+        "after": { "present": true, "value": "raw" }
+      },
+      {
+        "type": "field",
+        "occurrenceId": "root-a",
+        "fieldId": "name",
+        "fieldPath": ["name"],
+        "before": { "present": true, "value": "Main assembly" },
+        "after": { "present": true, "value": "Main assembly v2" }
+      },
+      {
+        "type": "field",
+        "occurrenceId": "child-keep",
+        "fieldId": "quantity",
+        "fieldPath": ["quantity"],
+        "before": {
+          "present": true,
+          "value": { "$type": "decimal", "value": "1.000", "unit": "pcs" }
+        },
+        "after": {
+          "present": true,
+          "value": { "$type": "decimal", "value": "2.500", "unit": "pcs" }
+        }
+      }
+    ]
+  }
+}

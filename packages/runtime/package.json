@@ -1,0 +1,33 @@
+{
+  "name": "@bom-editor/runtime",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Browser runtime foundations for BOM editor events, editing state, capabilities, and resource ownership.",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "clean": "node scripts/clean-dist.mjs",
+    "prebuild": "pnpm --filter @bom-editor/contracts build",
+    "build": "pnpm run clean && tsc -p tsconfig.json",
+    "typecheck": "pnpm --filter @bom-editor/contracts build && tsc -p tsconfig.typecheck.json",
+    "test": "pnpm run build && node --test --test-isolation=none test/runtime.test.mjs"
+  },
+  "dependencies": {
+    "@bom-editor/contracts": "workspace:*"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

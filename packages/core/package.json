@@ -1,0 +1,101 @@
+{
+  "name": "@qkplm/bom-editor",
+  "version": "1.0.0-rc.1",
+  "description": "Self-contained ESM SDK for the QKPLM BOM editor.",
+  "license": "Apache-2.0",
+  "author": "QKPLM",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wcker/qkplm-bom-editor.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/wcker/qkplm-bom-editor",
+  "bugs": {
+    "url": "https://github.com/wcker/qkplm-bom-editor/issues"
+  },
+  "keywords": ["bom", "editor", "canvas", "qkplm"],
+  "engines": {
+    "node": ">=22"
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./contracts": {
+      "types": "./dist/contracts.d.ts",
+      "import": "./dist/contracts.js",
+      "default": "./dist/contracts.js"
+    },
+    "./model": {
+      "types": "./dist/model.d.ts",
+      "import": "./dist/model.js",
+      "default": "./dist/model.js"
+    },
+    "./transaction": {
+      "types": "./dist/transaction.d.ts",
+      "import": "./dist/transaction.js",
+      "default": "./dist/transaction.js"
+    },
+    "./datasource": {
+      "types": "./dist/datasource.d.ts",
+      "import": "./dist/datasource.js",
+      "default": "./dist/datasource.js"
+    },
+    "./runtime": {
+      "types": "./dist/runtime.d.ts",
+      "import": "./dist/runtime.js",
+      "default": "./dist/runtime.js"
+    },
+    "./renderer/canvas": {
+      "types": "./dist/renderer/canvas.d.ts",
+      "import": "./dist/renderer/canvas.js",
+      "default": "./dist/renderer/canvas.js"
+    },
+    "./worker": {
+      "types": "./dist/worker.d.ts",
+      "import": "./dist/worker.js",
+      "default": "./dist/worker.js"
+    }
+  },
+  "scripts": {
+    "clean": "node scripts/clean-dist.mjs",
+    "prepack": "node ../../scripts/sync-package-legal-files.mjs",
+    "prebuild": "pnpm --filter @bom-editor/editor build && pnpm --filter @bom-editor/worker build",
+    "build:types": "tsc -p tsconfig.release.json",
+    "bundle": "rollup --config rollup.config.mjs",
+    "bundle:types": "node scripts/vendor-declarations.mjs",
+    "build": "pnpm run clean && pnpm run build:types && pnpm run bundle && pnpm run bundle:types",
+    "typecheck": "tsc -p tsconfig.typecheck.json",
+    "check:reexports": "node scripts/check-reexports.mjs",
+    "check:api": "node scripts/check-api-reports.mjs",
+    "api:check": "pnpm run build && pnpm run check:api",
+    "api:update": "pnpm run build && node scripts/check-api-reports.mjs --update",
+    "test:ssr": "node test/node-ssr-import-smoke.mjs",
+    "test": "pnpm run typecheck && pnpm run check:reexports && pnpm run build && pnpm run test:ssr && pnpm run check:api"
+  },
+  "devDependencies": {
+    "@bom-editor/contracts": "workspace:*",
+    "@bom-editor/datasource": "workspace:*",
+    "@bom-editor/editor": "workspace:*",
+    "@bom-editor/model": "workspace:*",
+    "@bom-editor/renderer-canvas": "workspace:*",
+    "@bom-editor/runtime": "workspace:*",
+    "@bom-editor/transaction": "workspace:*",
+    "@bom-editor/worker": "workspace:*"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  }
+}

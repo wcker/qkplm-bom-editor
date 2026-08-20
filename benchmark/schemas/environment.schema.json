@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bom-editor.local/schemas/f3-environment-approval-v1.json",
+  "title": "BOM Editor F3 locked environment approval",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "approved",
+    "approval",
+    "expected"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": "bom-f3-environment-approval/v1"
+    },
+    "approved": {
+      "type": "boolean"
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "approvedBy",
+        "approvedAt",
+        "notes"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "pending",
+            "approved",
+            "rejected"
+          ]
+        },
+        "approvedBy": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "approvedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "expected": {
+      "type": "object",
+      "description": "Exact partial match applied to the observed environment report.",
+      "properties": {
+        "operatingSystem": { "type": "object" },
+        "cpu": { "type": "object" },
+        "memory": { "type": "object" },
+        "node": { "type": "object" },
+        "playwright": { "type": "object" },
+        "chrome": { "type": "object" },
+        "gpu": { "type": ["object", "null"] },
+        "page": { "type": "object" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "approved": { "const": true }
+        },
+        "required": ["approved"]
+      },
+      "then": {
+        "properties": {
+          "approval": {
+            "properties": {
+              "status": { "const": "approved" },
+              "approvedBy": { "type": "string", "minLength": 1 },
+              "approvedAt": { "type": "string", "format": "date-time" }
+            }
+          },
+          "expected": {
+            "required": [
+              "operatingSystem",
+              "cpu",
+              "memory",
+              "node",
+              "playwright",
+              "chrome",
+              "gpu",
+              "page"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "approval": {
+            "properties": {
+              "status": { "const": "approved" }
+            },
+            "required": ["status"]
+          }
+        },
+        "required": ["approval"]
+      },
+      "then": {
+        "properties": {
+          "approved": { "const": true }
+        }
+      }
+    }
+  ]
+}

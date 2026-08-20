@@ -1,0 +1,10 @@
+{
+  "extends": "../../api-extractor.base.json",
+  "mainEntryPointFilePath": "<projectFolder>/.build/renderer/canvas.d.ts",
+  "bundledPackages": [
+    "@bom-editor/renderer-canvas"
+  ],
+  "apiReport": {
+    "reportFileName": "core-renderer-canvas"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "@bom-editor/demo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Vanilla browser workbench for the F3 10K BOM editor scenario.",
+  "type": "module",
+  "scripts": {
+    "clean": "node scripts/clean-dist.mjs",
+    "build:dependencies": "pnpm --filter @qkplm/bom-editor build && pnpm --filter @bom-editor/benchmark-fixtures build && pnpm --filter @qkplm/bom-editor-react build && pnpm --filter @qkplm/bom-editor-vue build && pnpm --filter @qkplm/bom-editor-umd build",
+    "build": "pnpm run clean && tsc -p tsconfig.json && node scripts/copy-static.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "pnpm run build && node --test --test-isolation=none test/demo-static.test.mjs",
+    "test:cdp": "node scripts/cdp-smoke.mjs",
+    "test:clipboard:cdp": "node scripts/cdp-clipboard-smoke.mjs",
+    "test:onboarding:browser": "node scripts/onboarding-browser-smoke.mjs",
+    "dev": "pnpm run build:dependencies && pnpm run build && node scripts/serve.mjs",
+    "start": "node scripts/serve.mjs"
+  },
+  "dependencies": {
+    "@bom-editor/benchmark-fixtures": "workspace:*",
+    "@qkplm/bom-editor": "workspace:*",
+    "@qkplm/bom-editor-react": "workspace:*",
+    "@qkplm/bom-editor-umd": "workspace:*",
+    "@qkplm/bom-editor-vue": "workspace:*"
+  },
+  "devDependencies": {
+    "playwright-core": "1.61.1"
+  }
+}

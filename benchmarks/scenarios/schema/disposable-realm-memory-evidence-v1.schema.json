@@ -1,0 +1,609 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "disposable-realm-memory-evidence-v1.schema.json",
+  "title": "Disposable same-origin Realm UA-memory evidence v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "protocolId",
+    "mode",
+    "timing",
+    "idleSampleCount",
+    "idleSamples",
+    "scenarios",
+    "diagnosticChecksPassed",
+    "qualification"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "bom-disposable-realm-memory-evidence/v1"
+    },
+    "protocolId": {
+      "const": "bom-disposable-realm-memory/v1"
+    },
+    "mode": {
+      "enum": ["smoke", "formal"]
+    },
+    "timing": {
+      "$ref": "#/$defs/timing"
+    },
+    "idleSampleCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "idleSamples": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/memorySample"
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "$ref": "#/$defs/scenario"
+      },
+      "allOf": [
+        {
+          "contains": {
+            "type": "object",
+            "properties": { "instanceCount": { "const": 1 } },
+            "required": ["instanceCount"]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "properties": { "instanceCount": { "const": 3 } },
+            "required": ["instanceCount"]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "properties": { "instanceCount": { "const": 5 } },
+            "required": ["instanceCount"]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      ]
+    },
+    "diagnosticChecksPassed": {
+      "type": "boolean"
+    },
+    "qualification": {
+      "$ref": "#/$defs/qualification"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "mode": { "const": "formal" } },
+        "required": ["mode"]
+      },
+      "then": {
+        "properties": {
+          "timing": {
+            "$ref": "#/$defs/formalTiming"
+          },
+          "idleSampleCount": {
+            "type": "integer",
+            "minimum": 10
+          },
+          "idleSamples": {
+            "type": "array",
+            "minItems": 10
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "mode": { "const": "smoke" } },
+        "required": ["mode"]
+      },
+      "then": {
+        "properties": {
+          "qualification": {
+            "type": "object",
+            "properties": {
+              "qualified": { "const": false },
+              "status": { "enum": ["unqualified", "failed"] }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "quietBeforeGcMs",
+        "cdpGcCycles",
+        "quietAfterGcMs"
+      ],
+      "properties": {
+        "quietBeforeGcMs": { "type": "integer", "minimum": 0 },
+        "cdpGcCycles": { "type": "integer", "minimum": 0 },
+        "quietAfterGcMs": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "formalTiming": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "quietBeforeGcMs",
+        "cdpGcCycles",
+        "quietAfterGcMs"
+      ],
+      "properties": {
+        "quietBeforeGcMs": { "const": 30000 },
+        "cdpGcCycles": { "const": 2 },
+        "quietAfterGcMs": { "const": 5000 }
+      }
+    },
+    "memorySample": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "phase",
+        "supported",
+        "bytes",
+        "timestampMs",
+        "timing",
+        "startedAtMs",
+        "completedAtMs"
+      ],
+      "properties": {
+        "phase": { "type": "string", "minLength": 1 },
+        "supported": { "type": "boolean" },
+        "bytes": { "type": ["number", "null"], "minimum": 0 },
+        "timestampMs": { "type": "number", "minimum": 0 },
+        "timing": { "$ref": "#/$defs/timing" },
+        "startedAtMs": { "type": "number", "minimum": 0 },
+        "completedAtMs": { "type": "number", "minimum": 0 }
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "instanceCount",
+        "viewport",
+        "devicePixelRatio",
+        "canvasLayerCount"
+      ],
+      "properties": {
+        "instanceCount": { "enum": [1, 3, 5] },
+        "viewport": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["width", "height"],
+          "properties": {
+            "width": { "const": 1920 },
+            "height": { "const": 1080 }
+          }
+        },
+        "devicePixelRatio": { "const": 2 },
+        "canvasLayerCount": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "ready": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "passed",
+        "measured",
+        "childAttributionPresent",
+        "instanceCount"
+      ],
+      "properties": {
+        "passed": { "type": "boolean" },
+        "measured": { "type": "boolean" },
+        "childAttributionPresent": { "type": ["boolean", "null"] },
+        "instanceCount": { "enum": [0, 1, 3, 5] }
+      }
+    },
+    "resourceAssertion": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["resource", "status", "supported", "outstanding"],
+      "properties": {
+        "resource": {
+          "enum": [
+            "dom",
+            "canvas",
+            "portal",
+            "worker",
+            "dom-listener",
+            "resize-observer",
+            "mutation-observer",
+            "intersection-observer",
+            "animation-frame",
+            "timeout",
+            "interval"
+          ]
+        },
+        "status": {
+          "enum": ["passed", "failed", "unavailable"]
+        },
+        "supported": { "type": "boolean" },
+        "outstanding": { "type": ["integer", "null"], "minimum": 0 }
+      }
+    },
+    "resourceAssertions": {
+      "type": "array",
+      "minItems": 11,
+      "maxItems": 11,
+      "items": {
+        "$ref": "#/$defs/resourceAssertion"
+      },
+      "allOf": [
+        { "$ref": "#/$defs/containsDom" },
+        { "$ref": "#/$defs/containsCanvas" },
+        { "$ref": "#/$defs/containsPortal" },
+        { "$ref": "#/$defs/containsWorker" },
+        { "$ref": "#/$defs/containsDomListener" },
+        { "$ref": "#/$defs/containsResizeObserver" },
+        { "$ref": "#/$defs/containsMutationObserver" },
+        { "$ref": "#/$defs/containsIntersectionObserver" },
+        { "$ref": "#/$defs/containsAnimationFrame" },
+        { "$ref": "#/$defs/containsTimeout" },
+        { "$ref": "#/$defs/containsInterval" }
+      ]
+    },
+    "destroy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["passed", "removalAuthorized", "resourceAssertions"],
+      "properties": {
+        "passed": { "type": "boolean" },
+        "removalAuthorized": { "type": "boolean" },
+        "resourceAssertions": {
+          "$ref": "#/$defs/resourceAssertions"
+        }
+      }
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidenceKind"],
+      "properties": {
+        "released": { "type": "boolean" },
+        "frameRemoved": { "type": "boolean" },
+        "parentReferencesReleased": { "type": "boolean" },
+        "evidenceKind": {
+          "enum": ["qualified-release", "none"]
+        }
+      }
+    },
+    "afterRemoval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["measured", "childAttributionPresent", "timing"],
+      "properties": {
+        "measured": { "type": "boolean" },
+        "childAttributionPresent": { "type": ["boolean", "null"] },
+        "timing": {
+          "anyOf": [
+            { "$ref": "#/$defs/timing" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "schemaVersion",
+        "realmId",
+        "purpose",
+        "instanceCount",
+        "completed",
+        "ready",
+        "destroy",
+        "release",
+        "afterRemoval",
+        "frameDetached",
+        "releaseQualified",
+        "errors"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "bom-disposable-realm-lifecycle-evidence/v1"
+        },
+        "realmId": { "type": "string", "minLength": 1 },
+        "purpose": { "type": "string", "minLength": 1 },
+        "instanceCount": { "enum": [0, 1, 3, 5] },
+        "completed": { "type": "boolean" },
+        "ready": { "$ref": "#/$defs/ready" },
+        "destroy": { "$ref": "#/$defs/destroy" },
+        "release": { "$ref": "#/$defs/release" },
+        "afterRemoval": { "$ref": "#/$defs/afterRemoval" },
+        "frameDetached": { "type": "boolean" },
+        "releaseQualified": { "type": "boolean" },
+        "errors": { "type": "array" }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "instanceCount",
+        "configuration",
+        "matchedWarmup",
+        "control",
+        "measurement"
+      ],
+      "properties": {
+        "instanceCount": { "enum": [1, 3, 5] },
+        "configuration": { "$ref": "#/$defs/configuration" },
+        "matchedWarmup": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "performed",
+            "configuration",
+            "ready",
+            "destroy",
+            "release",
+            "afterRemoval",
+            "raw"
+          ],
+          "properties": {
+            "performed": { "type": "boolean" },
+            "configuration": { "$ref": "#/$defs/configuration" },
+            "ready": { "$ref": "#/$defs/ready" },
+            "destroy": { "$ref": "#/$defs/destroy" },
+            "release": { "$ref": "#/$defs/release" },
+            "afterRemoval": { "$ref": "#/$defs/afterRemoval" },
+            "raw": { "$ref": "#/$defs/lifecycle" }
+          }
+        },
+        "control": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "instanceCount",
+            "ready",
+            "destroy",
+            "release",
+            "afterRemoval",
+            "rawDeltaBytes",
+            "raw"
+          ],
+          "properties": {
+            "instanceCount": { "const": 0 },
+            "ready": { "$ref": "#/$defs/ready" },
+            "destroy": { "$ref": "#/$defs/destroy" },
+            "release": { "$ref": "#/$defs/release" },
+            "afterRemoval": { "$ref": "#/$defs/afterRemoval" },
+            "rawDeltaBytes": { "type": ["number", "null"] },
+            "raw": { "$ref": "#/$defs/lifecycle" }
+          }
+        },
+        "measurement": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "ready",
+            "destroy",
+            "release",
+            "afterRemoval",
+            "rawDeltaBytes",
+            "raw"
+          ],
+          "properties": {
+            "ready": { "$ref": "#/$defs/ready" },
+            "destroy": { "$ref": "#/$defs/destroy" },
+            "release": { "$ref": "#/$defs/release" },
+            "afterRemoval": { "$ref": "#/$defs/afterRemoval" },
+            "rawDeltaBytes": { "type": ["number", "null"] },
+            "raw": { "$ref": "#/$defs/lifecycle" }
+          }
+        }
+      }
+    },
+    "qualification": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "schema",
+        "protocolId",
+        "mode",
+        "status",
+        "qualified",
+        "requiredInstanceCounts",
+        "noiseCalibration",
+        "scenarios",
+        "normativeWithinLimit",
+        "limitBytes",
+        "blockers"
+      ],
+      "properties": {
+        "schema": {
+          "const": "bom-disposable-realm-memory-summary/v1"
+        },
+        "protocolId": {
+          "const": "bom-disposable-realm-memory/v1"
+        },
+        "mode": { "enum": ["smoke", "formal"] },
+        "status": { "enum": ["qualified", "unqualified", "failed"] },
+        "qualified": { "type": "boolean" },
+        "requiredInstanceCounts": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "prefixItems": [
+            { "const": 1 },
+            { "const": 3 },
+            { "const": 5 }
+          ],
+          "items": false
+        },
+        "noiseCalibration": {
+          "type": "object",
+          "required": [
+            "schema",
+            "status",
+            "calibrated",
+            "sampleCount",
+            "noiseThresholdBytes"
+          ],
+          "properties": {
+            "schema": { "const": "bom-memory-noise-calibration/v1" },
+            "status": { "enum": ["qualified", "unqualified"] },
+            "calibrated": { "type": "boolean" },
+            "sampleCount": { "type": "integer", "minimum": 0 },
+            "noiseThresholdBytes": { "type": ["number", "null"], "minimum": 0 }
+          }
+        },
+        "scenarios": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "normativeWithinLimit": { "type": ["boolean", "null"] },
+        "limitBytes": { "const": 5242880 },
+        "blockers": { "type": "array" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "qualified": { "const": true } },
+            "required": ["qualified"]
+          },
+          "then": {
+            "properties": {
+              "mode": { "const": "formal" },
+              "status": { "const": "qualified" },
+              "normativeWithinLimit": { "const": true },
+              "blockers": { "type": "array", "maxItems": 0 }
+            }
+          }
+        }
+      ]
+    },
+    "containsDom": {
+      "type": "array",
+      "contains": {
+        "type": "object",
+        "properties": { "resource": { "const": "dom" } },
+        "required": ["resource"]
+      },
+      "minContains": 1,
+      "maxContains": 1
+    },
+    "containsCanvas": {
+      "type": "array",
+      "contains": {
+        "type": "object",
+        "properties": { "resource": { "const": "canvas" } },
+        "required": ["resource"]
+      },
+      "minContains": 1,
+      "maxContains": 1
+    },
+    "containsPortal": {
+      "type": "array",
+      "contains": {
+        "type": "object",
+        "properties": { "resource": { "const": "portal" } },
+        "required": ["resource"]
+      },
+      "minContains": 1,
+      "maxContains": 1
+    },
+    "containsWorker": {
+      "type": "array",
+      "contains": {
+        "type": "object",
+        "properties": { "resource": { "const": "worker" } },
+        "required": ["resource"]
+      },
+      "minContains": 1,
+      "maxContains": 1
+    },
+    "containsDomListener": {
+      "type": "array",
+      "contains": {
+        "type": "object",
+        "properties": { "resource": { "const": "dom-listener" } },
+        "required": ["resource"]
+      },
+      "minContains": 1,
+      "maxContains": 1
+    },
+    "containsResizeObserver": {
+      "type": "array",
+      "contains": {
+        "type": "object",
+        "properties": { "resource": { "const": "resize-observer" } },
+        "required": ["resource"]
+      },
+      "minContains": 1,
+      "maxContains": 1
+    },
+    "containsMutationObserver": {
+      "type": "array",
+      "contains": {
+        "type": "object",
+        "properties": { "resource": { "const": "mutation-observer" } },
+        "required": ["resource"]
+      },
+      "minContains": 1,
+      "maxContains": 1
+    },
+    "containsIntersectionObserver": {
+      "type": "array",
+      "contains": {
+        "type": "object",
+        "properties": { "resource": { "const": "intersection-observer" } },
+        "required": ["resource"]
+      },
+      "minContains": 1,
+      "maxContains": 1
+    },
+    "containsAnimationFrame": {
+      "type": "array",
+      "contains": {
+        "type": "object",
+        "properties": { "resource": { "const": "animation-frame" } },
+        "required": ["resource"]
+      },
+      "minContains": 1,
+      "maxContains": 1
+    },
+    "containsTimeout": {
+      "type": "array",
+      "contains": {
+        "type": "object",
+        "properties": { "resource": { "const": "timeout" } },
+        "required": ["resource"]
+      },
+      "minContains": 1,
+      "maxContains": 1
+    },
+    "containsInterval": {
+      "type": "array",
+      "contains": {
+        "type": "object",
+        "properties": { "resource": { "const": "interval" } },
+        "required": ["resource"]
+      },
+      "minContains": 1,
+      "maxContains": 1
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "name": "@qkplm/bom-editor-umd",
+  "version": "1.0.0-rc.1",
+  "description": "UMD and ESM browser bridge for the QKPLM BOM editor.",
+  "license": "Apache-2.0",
+  "author": "QKPLM",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wcker/qkplm-bom-editor.git",
+    "directory": "packages/umd"
+  },
+  "homepage": "https://github.com/wcker/qkplm-bom-editor",
+  "bugs": {
+    "url": "https://github.com/wcker/qkplm-bom-editor/issues"
+  },
+  "keywords": ["bom", "editor", "umd", "qkplm"],
+  "engines": {
+    "node": ">=22"
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": ["dist", "README.md", "LICENSE", "NOTICE"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "clean": "node scripts/clean-dist.mjs",
+    "prepack": "node ../../scripts/sync-package-legal-files.mjs",
+    "bundle": "rollup --config rollup.config.mjs",
+    "integrity": "node scripts/create-integrity.mjs",
+    "build": "pnpm run clean && tsc -p tsconfig.json && pnpm run bundle && pnpm run integrity",
+    "typecheck": "tsc -p tsconfig.typecheck.json",
+    "test": "pnpm run build && pnpm run test:global",
+    "test:global": "node test/umd-global-smoke.mjs"
+  },
+  "dependencies": {
+    "@qkplm/bom-editor": "workspace:1.0.0-rc.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  }
+}

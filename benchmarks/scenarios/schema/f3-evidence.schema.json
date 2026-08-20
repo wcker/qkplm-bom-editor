@@ -1,0 +1,342 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bom-editor.invalid/schema/f3-evidence-v1.json",
+  "title": "BOM editor F3 browser evidence candidate",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schemaVersion",
+    "runId",
+    "generatedAt",
+    "mode",
+    "overall",
+    "f3Pass",
+    "qualification"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "bom-f3-browser-evidence/v1"
+    },
+    "runId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "mode": {
+      "enum": ["smoke", "formal"]
+    },
+    "overall": {
+      "enum": ["candidate", "unqualified", "failed"]
+    },
+    "f3Pass": {
+      "const": false,
+      "description": "This candidate runner never signs formal F3 acceptance."
+    },
+    "qualification": {
+      "type": "object",
+      "required": [
+        "releaseQualified",
+        "certifiedTraceExtractor",
+        "destroyRetentionQualified",
+        "blockers"
+      ],
+      "properties": {
+        "releaseQualified": { "const": false },
+        "certifiedTraceExtractor": { "const": false },
+        "destroyRetentionQualified": {
+          "const": false,
+          "description": "Same-Document UA memory deltas cannot qualify component destroy retention."
+        },
+        "blockers": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        }
+      }
+    },
+    "sampling": {
+      "type": "object",
+      "required": ["warmup", "measured"],
+      "properties": {
+        "warmup": { "type": "integer", "minimum": 1 },
+        "measured": { "type": "integer", "minimum": 3 }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "required": [
+        "coldInteractiveReadyCandidate",
+        "inputFeedbackCandidate"
+      ],
+      "properties": {
+        "coldInteractiveReadyCandidate": { "$ref": "#/$defs/metric" },
+        "inputFeedbackCandidate": { "$ref": "#/$defs/inputMetric" }
+      }
+    },
+    "gates": {
+      "type": "object",
+      "required": [
+        "lifecycle",
+        "memory",
+        "memorySupported",
+        "memoryWithinLimit"
+      ],
+      "properties": {
+        "lifecycle": {
+          "type": "array",
+          "minItems": 3,
+          "items": { "$ref": "#/$defs/lifecycleMemoryEntry" }
+        },
+        "memory": { "$ref": "#/$defs/memoryQualification" },
+        "memorySupported": { "type": "boolean" },
+        "memoryWithinLimit": { "type": "null" }
+      }
+    },
+    "trace": {
+      "type": "object",
+      "required": ["captured", "certifiedExtractor"],
+      "properties": {
+        "captured": { "type": "boolean" },
+        "certifiedExtractor": { "const": false }
+      }
+    }
+  },
+  "$defs": {
+    "metric": {
+      "type": "object",
+      "required": ["endpoint", "statistics"],
+      "properties": {
+        "endpoint": { "type": "string", "minLength": 1 },
+        "statistics": {
+          "type": "object",
+          "required": [
+            "count",
+            "percentileMethod",
+            "p50Ms",
+            "p95Ms",
+            "p99Ms",
+            "p99Status",
+            "p99ObservedSamples",
+            "p99RequiredSamples",
+            "maxMs",
+            "standardDeviationMs"
+          ],
+          "properties": {
+            "count": { "type": "integer", "minimum": 1 },
+            "percentileMethod": { "const": "nearest-rank" },
+            "p50Ms": { "type": "number", "minimum": 0 },
+            "p95Ms": { "type": "number", "minimum": 0 },
+            "p99Ms": {
+              "anyOf": [
+                { "type": "number", "minimum": 0 },
+                { "type": "null" }
+              ]
+            },
+            "p99Status": { "type": "string" },
+            "p99ObservedSamples": { "type": "integer", "minimum": 1 },
+            "p99RequiredSamples": {
+              "anyOf": [
+                { "type": "integer", "minimum": 1 },
+                { "type": "null" }
+              ]
+            },
+            "maxMs": { "type": "number", "minimum": 0 },
+            "standardDeviationMs": { "type": "number", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "inputMetric": {
+      "allOf": [
+        { "$ref": "#/$defs/metric" },
+        {
+          "type": "object",
+          "required": ["segments"],
+          "properties": {
+            "segments": {
+              "type": "object",
+              "required": [
+                "inputDispatchToCaptureCandidate",
+                "captureToTransactionCommittedCandidate",
+                "inputToTransactionCommittedCandidate",
+                "transactionCommittedToRenderCommitCandidate"
+              ],
+              "properties": {
+                "inputDispatchToCaptureCandidate": {
+                  "$ref": "#/$defs/metric"
+                },
+                "captureToTransactionCommittedCandidate": {
+                  "$ref": "#/$defs/metric"
+                },
+                "inputToTransactionCommittedCandidate": {
+                  "$ref": "#/$defs/metric"
+                },
+                "transactionCommittedToRenderCommitCandidate": {
+                  "$ref": "#/$defs/metric"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "memoryQualification": {
+      "type": "object",
+      "required": [
+        "protocol",
+        "status",
+        "uaMemorySupported",
+        "observableResourceReleasePassed",
+        "normativeRetainedWithinLimit",
+        "canvasAllocatorBaselineCalibrated",
+        "blocker"
+      ],
+      "properties": {
+        "protocol": {
+          "const": "same-document-matched-warmup-diagnostic/v1"
+        },
+        "status": { "const": "unqualified" },
+        "uaMemorySupported": { "type": "boolean" },
+        "observableResourceReleasePassed": { "type": "boolean" },
+        "normativeRetainedWithinLimit": { "type": "null" },
+        "canvasAllocatorBaselineCalibrated": { "const": false },
+        "blocker": {
+          "const": "Canvas allocator baseline is not calibrated for normative destroy-retention attribution"
+        }
+      }
+    },
+    "lifecycleMemoryEntry": {
+      "type": "object",
+      "required": [
+        "instanceCount",
+        "baselineMemory",
+        "readyMemory",
+        "afterDestroyMemory",
+        "memoryAssessment"
+      ],
+      "properties": {
+        "instanceCount": { "enum": [1, 3, 5] },
+        "memoryAssessment": { "$ref": "#/$defs/memoryAssessment" }
+      }
+    },
+    "memoryAssessment": {
+      "type": "object",
+      "required": [
+        "protocol",
+        "uaMemorySupported",
+        "observableResourceRelease",
+        "diagnostic",
+        "canvasAllocator",
+        "normativeRetention"
+      ],
+      "properties": {
+        "protocol": {
+          "type": "object",
+          "required": [
+            "id",
+            "measurementScope",
+            "realmReclaimedBetweenBaselineAndAfterDestroy",
+            "allocatorWarmup",
+            "retentionSample",
+            "baselineIdleSampleCount",
+            "normativeRequiredBaselineIdleSampleCount"
+          ],
+          "properties": {
+            "id": {
+              "const": "same-document-matched-warmup-diagnostic/v1"
+            },
+            "measurementScope": { "const": "shared-acceptance-document" },
+            "realmReclaimedBetweenBaselineAndAfterDestroy": { "const": false },
+            "allocatorWarmup": { "$ref": "#/$defs/memoryWaitProtocol" },
+            "retentionSample": { "$ref": "#/$defs/memoryWaitProtocol" },
+            "baselineIdleSampleCount": { "const": 1 },
+            "normativeRequiredBaselineIdleSampleCount": { "const": 10 }
+          }
+        },
+        "uaMemorySupported": { "type": "boolean" },
+        "observableResourceRelease": {
+          "type": "object",
+          "required": ["passed", "semantics", "counts"],
+          "properties": {
+            "passed": { "type": "boolean" },
+            "semantics": { "type": "string", "minLength": 1 },
+            "counts": { "type": "object" }
+          }
+        },
+        "diagnostic": {
+          "type": "object",
+          "required": [
+            "semantics",
+            "readyMinusBaselineBytes",
+            "afterDestroyMinusBaselineBytes",
+            "retainedPositivePartBytes",
+            "afterDestroyMinusBaselineBreakdownBytes"
+          ],
+          "properties": {
+            "semantics": {
+              "const": "same-document UA-memory delta; not component ownership or leak attribution"
+            }
+          }
+        },
+        "canvasAllocator": {
+          "type": "object",
+          "required": [
+            "baselineBytes",
+            "readyBytes",
+            "afterDestroyBytes",
+            "afterDestroyMinusBaselineBytes",
+            "baselineCalibrated",
+            "attribution"
+          ],
+          "properties": {
+            "baselineCalibrated": { "const": false },
+            "attribution": { "type": "string", "minLength": 1 }
+          }
+        },
+        "normativeRetention": {
+          "type": "object",
+          "required": [
+            "status",
+            "retainedBytes",
+            "limitBytes",
+            "withinLimit",
+            "blockerCode",
+            "blocker"
+          ],
+          "properties": {
+            "status": { "const": "unqualified" },
+            "retainedBytes": { "type": "null" },
+            "limitBytes": { "const": 5242880 },
+            "withinLimit": { "type": "null" },
+            "blockerCode": {
+              "const": "CANVAS_ALLOCATOR_BASELINE_NOT_CALIBRATED"
+            },
+            "blocker": {
+              "const": "Canvas allocator baseline is not calibrated for normative destroy-retention attribution"
+            }
+          }
+        }
+      }
+    },
+    "memoryWaitProtocol": {
+      "type": "object",
+      "required": [
+        "quietBeforeGcMs",
+        "cdpGcCycles",
+        "quietAfterGcMs",
+        "normative",
+        "normativeQuietTimingApplied"
+      ],
+      "properties": {
+        "quietBeforeGcMs": { "type": "integer", "minimum": 0 },
+        "cdpGcCycles": { "const": 2 },
+        "quietAfterGcMs": { "type": "integer", "minimum": 0 },
+        "normative": { "const": false },
+        "normativeQuietTimingApplied": { "type": "boolean" }
+      }
+    }
+  }
+}

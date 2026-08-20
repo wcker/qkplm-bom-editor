@@ -1,0 +1,58 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": "..",
+    "paths": {
+      "@bom-editor/contracts": [
+        "../contracts/src/index.ts"
+      ],
+      "@bom-editor/datasource": [
+        "../datasource/src/index.ts"
+      ],
+      "@bom-editor/editor": [
+        "../editor/src/index.ts"
+      ],
+      "@bom-editor/model": [
+        "../model/src/index.ts"
+      ],
+      "@bom-editor/renderer-canvas": [
+        "../renderer-canvas/src/index.ts"
+      ],
+      "@bom-editor/runtime": [
+        "../runtime/src/index.ts"
+      ],
+      "@bom-editor/transaction": [
+        "../transaction/src/index.ts"
+      ],
+      "@bom-editor/visible-projection": [
+        "../visible-projection/src/index.ts"
+      ],
+      "@qkplm/bom-editor": [
+        "./src/index.ts"
+      ],
+      "@qkplm/bom-editor/contracts": [
+        "./src/contracts.ts"
+      ],
+      "@qkplm/bom-editor/datasource": [
+        "./src/datasource.ts"
+      ],
+      "@qkplm/bom-editor/model": [
+        "./src/model.ts"
+      ],
+      "@qkplm/bom-editor/renderer/canvas": [
+        "./src/renderer/canvas.ts"
+      ],
+      "@qkplm/bom-editor/runtime": [
+        "./src/runtime.ts"
+      ],
+      "@qkplm/bom-editor/transaction": [
+        "./src/transaction.ts"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts"
+  ]
+}

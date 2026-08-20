@@ -1,0 +1,63 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  publish:
+    if: startsWith(github.event.release.tag_name, 'v')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          fetch-depth: 0
+      - name: Verify release tag belongs to the default branch
+        run: |
+          git fetch origin ${{ github.event.repository.default_branch }}
+          git merge-base --is-ancestor ${{ github.event.release.tag_name }} origin/${{ github.event.repository.default_branch }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.8.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: node scripts/validate-release-tag.mjs ${{ github.event.release.tag_name }}
+      - run: pnpm run check
+      - run: node scripts/release-verify.mjs --release-manifest release-evidence.json
+      - run: pnpm exec playwright-core install --with-deps chromium firefox webkit
+      - run: pnpm run test:browser-release
+      - name: Select npm dist-tag
+        id: tag
+        run: |
+          if [[ "${{ github.event.release.tag_name }}" == *-* ]]; then
+            echo "value=next" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=latest" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Generate SPDX SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          path: .
+          format: spdx-json
+          output-file: qkplm-bom-editor.spdx.json
+      - name: Publish Core with npm provenance
+        run: pnpm --filter @qkplm/bom-editor publish --access public --provenance --no-git-checks --tag ${{ steps.tag.outputs.value }}
+      - name: Publish React adapter with npm provenance
+        run: pnpm --filter @qkplm/bom-editor-react publish --access public --provenance --no-git-checks --tag ${{ steps.tag.outputs.value }}
+      - name: Publish Vue adapter with npm provenance
+        run: pnpm --filter @qkplm/bom-editor-vue publish --access public --provenance --no-git-checks --tag ${{ steps.tag.outputs.value }}
+      - name: Publish UMD package with npm provenance
+        run: pnpm --filter @qkplm/bom-editor-umd publish --access public --provenance --no-git-checks --tag ${{ steps.tag.outputs.value }}
+      - name: Attach generated supply-chain evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload ${{ github.event.release.tag_name }} packages/umd/dist/integrity.json qkplm-bom-editor.spdx.json release-evidence.json --clobber

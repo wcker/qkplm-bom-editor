@@ -1,0 +1,10 @@
+{
+  "extends": "../../api-extractor.base.json",
+  "mainEntryPointFilePath": "<projectFolder>/.build/transaction.d.ts",
+  "bundledPackages": [
+    "@bom-editor/transaction"
+  ],
+  "apiReport": {
+    "reportFileName": "core-transaction"
+  }
+}

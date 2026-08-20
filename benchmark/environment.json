@@ -1,0 +1,96 @@
+{
+  "$schema": "./schemas/environment.schema.json",
+  "schemaVersion": "bom-f3-environment-approval/v1",
+  "approved": true,
+  "approval": {
+    "status": "approved",
+    "approvedBy": "workspace-owner",
+    "approvedAt": "2026-08-05T15:03:11.237Z",
+    "notes": "Reapproved by the workspace owner for the current Chrome 151 F3 formal runner environment and current headed GPU device set after the browser auto-update to 151.0.7922.108. DPR is normalized to six decimal places to ignore browser floating-point noise. Reapprove whenever a locked value changes."
+  },
+  "expected": {
+    "operatingSystem": {
+      "platform": "win32",
+      "release": "10.0.26200",
+      "version": "Windows 11 Pro",
+      "architecture": "x64",
+      "hostname": "BQThinkbook16",
+      "powerScheme": "电源方案 GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (平衡)"
+    },
+    "cpu": {
+      "models": [
+        "Intel(R) Core(TM) Ultra 9 185H"
+      ],
+      "logicalCoreCount": 22
+    },
+    "memory": {
+      "totalBytes": 33945935872
+    },
+    "node": {
+      "version": "v24.15.0",
+      "executablePath": "C:\\Program Files\\nodejs\\node.exe"
+    },
+    "playwright": {
+      "name": "playwright-core",
+      "version": "1.61.1"
+    },
+    "chrome": {
+      "executablePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+      "executableBytes": 4074648,
+      "executableSha256": "ae6d512ada124b63d51f13e5bf79ad514024bc08fa6666d93b0481e18eaa02a3",
+      "product": "Chrome/151.0.7922.108",
+      "revision": "@4744b886309d987d292e43232776d2206cccb13d"
+    },
+    "gpu": {
+      "devices": [
+        {
+          "vendorId": 32902,
+          "deviceId": 32085,
+          "vendorString": "",
+          "deviceString": "Intel(R) Arc(TM) Graphics",
+          "driverVendor": "Intel",
+          "driverVersion": "32.0.101.8243"
+        },
+        {
+          "vendorId": 32902,
+          "deviceId": 32085,
+          "vendorString": "",
+          "deviceString": "Intel(R) Arc(TM) Graphics",
+          "driverVendor": "",
+          "driverVersion": "32.0.101.8243"
+        },
+        {
+          "vendorId": 32902,
+          "deviceId": 32085,
+          "vendorString": "",
+          "deviceString": "Intel(R) Arc(TM) Graphics",
+          "driverVendor": "",
+          "driverVersion": "32.0.101.8243"
+        },
+        {
+          "vendorId": 5140,
+          "deviceId": 140,
+          "vendorString": "",
+          "deviceString": "Microsoft Basic Render Driver",
+          "driverVendor": "",
+          "driverVersion": "10.0.26100.8521"
+        }
+      ]
+    },
+    "page": {
+      "crossOriginIsolated": true,
+      "devicePixelRatio": 2,
+      "locale": "zh-CN",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "screen": {
+        "width": 1920,
+        "height": 1080,
+        "colorDepth": 24,
+        "pixelDepth": 24
+      }
+    }
+  }
+}

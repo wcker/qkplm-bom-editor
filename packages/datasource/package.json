@@ -1,0 +1,35 @@
+{
+  "name": "@bom-editor/datasource",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Callable DataSource API and deterministic in-memory source for the BOM editor.",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "clean": "node scripts/clean-dist.mjs",
+    "prebuild": "pnpm --filter @bom-editor/transaction build",
+    "build": "pnpm run clean && tsc -p tsconfig.json",
+    "typecheck": "pnpm --filter @bom-editor/transaction build && tsc -p tsconfig.typecheck.json",
+    "test": "pnpm run build && node --test --test-isolation=none test/memory-datasource.test.mjs test/remote-commit-coordinator.test.mjs test/remote-state-machine.test.mjs"
+  },
+  "dependencies": {
+    "@bom-editor/contracts": "workspace:*",
+    "@bom-editor/model": "workspace:*",
+    "@bom-editor/transaction": "workspace:*"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,297 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "application-pixel-frame-correlation-v1.schema.json",
+  "title": "F3 compositor/application pixel frame correlation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "evidenceSchemaVersion",
+    "status",
+    "qualified",
+    "passed",
+    "blankFrameCount",
+    "expectedRevision",
+    "frameCount",
+    "window",
+    "clockMapping",
+    "options",
+    "completeness",
+    "frames",
+    "blockers"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "bom-f3-application-pixel-frame-correlation/v1"
+    },
+    "evidenceSchemaVersion": {
+      "const": "bom-f3-application-pixel-frame-evidence/v1"
+    },
+    "status": { "enum": ["passed", "failed", "unqualified"] },
+    "qualified": { "type": "boolean" },
+    "passed": { "type": ["boolean", "null"] },
+    "blankFrameCount": { "type": ["integer", "null"], "minimum": 0 },
+    "expectedRevision": { "type": ["string", "null"], "minLength": 1 },
+    "frameCount": { "type": "integer", "minimum": 0 },
+    "window": {
+      "anyOf": [
+        { "$ref": "#/$defs/window" },
+        { "type": "null" }
+      ]
+    },
+    "clockMapping": {
+      "anyOf": [
+        { "$ref": "#/$defs/clockMapping" },
+        { "type": "null" }
+      ]
+    },
+    "options": { "$ref": "#/$defs/options" },
+    "completeness": { "$ref": "#/$defs/completeness" },
+    "frames": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/frame" }
+    },
+    "blockers": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/blocker" }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "qualified": { "const": true } },
+        "required": ["qualified"]
+      },
+      "then": {
+        "properties": {
+          "status": { "enum": ["passed", "failed"] },
+          "passed": { "type": "boolean" },
+          "blankFrameCount": { "type": "integer", "minimum": 0 },
+          "expectedRevision": { "type": "string" },
+          "frameCount": { "type": "integer", "minimum": 1 },
+          "window": { "$ref": "#/$defs/window" },
+          "clockMapping": { "$ref": "#/$defs/clockMapping" },
+          "blockers": { "type": "array", "maxItems": 0 }
+        }
+      },
+      "else": {
+        "properties": {
+          "status": { "const": "unqualified" },
+          "passed": { "type": "null" },
+          "blankFrameCount": { "type": "null" },
+          "blockers": { "type": "array", "minItems": 1 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "status": { "const": "passed" } },
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "qualified": { "const": true },
+          "passed": { "const": true },
+          "blankFrameCount": { "const": 0 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "status": { "const": "failed" } },
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "qualified": { "const": true },
+          "passed": { "const": false },
+          "blankFrameCount": { "type": "integer", "minimum": 1 }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "startMark",
+        "endMark",
+        "traceStartTimestampUs",
+        "traceEndTimestampUs",
+        "traceDurationMs",
+        "applicationStartTimeMs",
+        "applicationEndTimeMs",
+        "applicationDurationMs",
+        "durationDifferenceMs"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "startMark": { "type": "string", "minLength": 1 },
+        "endMark": { "type": "string", "minLength": 1 },
+        "traceStartTimestampUs": { "type": "integer", "minimum": 0 },
+        "traceEndTimestampUs": { "type": "integer", "minimum": 1 },
+        "traceDurationMs": { "type": "number", "exclusiveMinimum": 0 },
+        "applicationStartTimeMs": { "type": "number", "minimum": 0 },
+        "applicationEndTimeMs": { "type": "number", "exclusiveMinimum": 0 },
+        "applicationDurationMs": { "type": "number", "exclusiveMinimum": 0 },
+        "durationDifferenceMs": { "type": "number" }
+      }
+    },
+    "clockMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "traceStartTimestampUs",
+        "traceEndTimestampUs",
+        "pageStartTimeMs",
+        "pageEndTimeMs",
+        "pageMsPerTraceUs"
+      ],
+      "properties": {
+        "method": { "const": "affine-marker-endpoint-mapping" },
+        "traceStartTimestampUs": { "type": "integer", "minimum": 0 },
+        "traceEndTimestampUs": { "type": "integer", "minimum": 1 },
+        "pageStartTimeMs": { "type": "number", "minimum": 0 },
+        "pageEndTimeMs": { "type": "number", "exclusiveMinimum": 0 },
+        "pageMsPerTraceUs": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "options": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scrollOffsetTolerancePx",
+        "surfaceCoverageTolerancePx",
+        "windowDurationToleranceMs"
+      ],
+      "properties": {
+        "scrollOffsetTolerancePx": { "type": "number", "minimum": 0 },
+        "surfaceCoverageTolerancePx": { "type": "number", "minimum": 0 },
+        "windowDurationToleranceMs": { "type": "number", "minimum": 0 }
+      }
+    },
+    "completeness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "presentedFrameCount",
+        "mappedFrameCount",
+        "unmappedFrameCount",
+        "classifiedFrameCount",
+        "revisionMatchedFrameCount",
+        "scrollMatchedFrameCount",
+        "surfaceCoveredFrameCount",
+        "staleFrameCount",
+        "geometryFailureFrameCount",
+        "pixelFailureFrameCount",
+        "blankFrameCount"
+      ],
+      "properties": {
+        "presentedFrameCount": { "type": "integer", "minimum": 0 },
+        "mappedFrameCount": { "type": "integer", "minimum": 0 },
+        "unmappedFrameCount": { "type": "integer", "minimum": 0 },
+        "classifiedFrameCount": { "type": "integer", "minimum": 0 },
+        "revisionMatchedFrameCount": { "type": "integer", "minimum": 0 },
+        "scrollMatchedFrameCount": { "type": "integer", "minimum": 0 },
+        "surfaceCoveredFrameCount": { "type": "integer", "minimum": 0 },
+        "staleFrameCount": { "type": "integer", "minimum": 0 },
+        "geometryFailureFrameCount": { "type": "integer", "minimum": 0 },
+        "pixelFailureFrameCount": { "type": "integer", "minimum": 0 },
+        "blankFrameCount": { "type": ["integer", "null"], "minimum": 0 }
+      }
+    },
+    "layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "layer",
+        "readbackSucceeded",
+        "sampledPixelCount",
+        "nonTransparentPixelCount",
+        "rgbaChecksum"
+      ],
+      "properties": {
+        "layer": { "enum": ["background", "content"] },
+        "readbackSucceeded": { "type": "boolean" },
+        "sampledPixelCount": { "type": "integer", "minimum": 0 },
+        "nonTransparentPixelCount": { "type": "integer", "minimum": 0 },
+        "rgbaChecksum": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9a-f]{8}$"
+        }
+      }
+    },
+    "reason": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message", "category"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 },
+        "category": { "enum": ["mapping", "stale", "geometry", "pixel"] }
+      }
+    },
+    "frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ordinal",
+        "traceTimestampUs",
+        "pageTimeMs",
+        "mapped",
+        "failed",
+        "stale",
+        "scrollStateSequence",
+        "paintStateSequence",
+        "requestedScrollTop",
+        "observedScrollTop",
+        "paintedScrollTop",
+        "paintRevision",
+        "revisionMatched",
+        "scrollMatched",
+        "surfaceCovered",
+        "layers",
+        "reasons"
+      ],
+      "properties": {
+        "ordinal": { "type": "integer", "minimum": 0 },
+        "traceTimestampUs": { "type": "integer", "minimum": 0 },
+        "pageTimeMs": { "type": "number", "minimum": 0 },
+        "mapped": { "type": "boolean" },
+        "failed": { "type": ["boolean", "null"] },
+        "stale": { "type": ["boolean", "null"] },
+        "scrollStateSequence": { "type": ["integer", "null"], "minimum": 0 },
+        "paintStateSequence": { "type": ["integer", "null"], "minimum": 0 },
+        "requestedScrollTop": { "type": ["number", "null"], "minimum": 0 },
+        "observedScrollTop": { "type": ["number", "null"], "minimum": 0 },
+        "paintedScrollTop": { "type": ["number", "null"], "minimum": 0 },
+        "paintRevision": { "type": ["string", "null"], "minLength": 1 },
+        "revisionMatched": { "type": ["boolean", "null"] },
+        "scrollMatched": { "type": ["boolean", "null"] },
+        "surfaceCovered": { "type": ["boolean", "null"] },
+        "layers": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/layer" },
+          "maxItems": 2
+        },
+        "reasons": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/reason" }
+        }
+      }
+    },
+    "blocker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message", "path"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 },
+        "path": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light">
+    <title>BOM Editor F3 Acceptance</title>
+    <style>
+      :root {
+        color: #182026;
+        background: #f4f6f8;
+        font-family: Arial, sans-serif;
+        font-synthesis: none;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-width: 320px;
+        min-height: 100%;
+        margin: 0;
+      }
+
+      body {
+        min-height: 100vh;
+      }
+
+      .acceptance-header {
+        min-height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 10px 16px;
+        border-bottom: 1px solid #cbd3da;
+        background: #ffffff;
+      }
+
+      .acceptance-header h1 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+
+      #acceptance-status {
+        max-width: 60vw;
+        overflow: hidden;
+        color: #43515c;
+        font-size: 12px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      #acceptance-host-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+        gap: 12px;
+        align-items: stretch;
+        padding: 12px;
+      }
+
+      .acceptance-instance {
+        min-width: 0;
+        height: clamp(300px, 43vh, 520px);
+        display: grid;
+        grid-template-rows: 30px minmax(260px, 1fr);
+        overflow: hidden;
+        border: 1px solid #bcc6ce;
+        border-radius: 6px;
+        background: #ffffff;
+      }
+
+      #acceptance-host-grid[data-count="1"] .acceptance-instance {
+        height: max(360px, calc(100vh - 80px));
+      }
+
+      .acceptance-instance h2 {
+        min-width: 0;
+        margin: 0;
+        padding: 7px 10px;
+        overflow: hidden;
+        border-bottom: 1px solid #d8dee3;
+        color: #34434e;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .acceptance-host {
+        position: relative;
+        min-width: 0;
+        min-height: 260px;
+        overflow: hidden;
+      }
+
+      .acceptance-disposable-realm {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 2147483647;
+        display: block;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        border: 0;
+        background: #ffffff;
+      }
+
+      @media (max-width: 560px) {
+        .acceptance-header {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        #acceptance-status {
+          max-width: 100%;
+        }
+
+        #acceptance-host-grid {
+          padding: 8px;
+        }
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "@bom-editor/benchmark-fixtures": "/benchmarks/fixtures/dist/index.js",
+          "@bom-editor/contracts": "/packages/contracts/dist/index.js",
+          "@qkplm/bom-editor": "/packages/core/dist/index.js",
+          "@qkplm/bom-editor/model": "/packages/core/dist/model.js",
+          "@qkplm/bom-editor/renderer/canvas": "/packages/core/dist/renderer/canvas.js",
+          "@bom-editor/datasource": "/packages/datasource/dist/index.js",
+          "@bom-editor/editor": "/packages/editor/dist/index.js",
+          "@bom-editor/model": "/packages/model/dist/index.js",
+          "@bom-editor/renderer-canvas": "/packages/renderer-canvas/dist/index.js",
+          "@bom-editor/runtime": "/packages/runtime/dist/index.js",
+          "@bom-editor/transaction": "/packages/transaction/dist/index.js",
+          "@bom-editor/visible-projection": "/packages/visible-projection/dist/index.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="acceptance-header">
+      <h1>BOM Editor F3 Acceptance</h1>
+      <output id="acceptance-status" aria-live="polite">Preparing fixture</output>
+    </header>
+    <main
+      id="acceptance-host-grid"
+      data-count="0"
+      aria-label="BOM editor acceptance instances"
+    ></main>
+    <script type="module" src="/acceptance.js"></script>
+  </body>
+</html>

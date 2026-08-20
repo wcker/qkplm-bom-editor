@@ -1,0 +1,35 @@
+{
+  "name": "@bom-editor/renderer-canvas",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Viewport-bounded Canvas renderer with virtual treegrid semantics and a controlled DOM editor portal.",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "prebuild": "pnpm --filter @bom-editor/runtime build && pnpm --filter @bom-editor/visible-projection build",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "pnpm --filter @bom-editor/runtime build && pnpm --filter @bom-editor/visible-projection build && tsc -p tsconfig.typecheck.json",
+    "test": "pnpm run build && node --test --test-isolation=none test/*.test.mjs"
+  },
+  "dependencies": {
+    "@bom-editor/contracts": "workspace:*",
+    "@bom-editor/model": "workspace:*",
+    "@bom-editor/runtime": "workspace:*",
+    "@bom-editor/visible-projection": "workspace:*"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

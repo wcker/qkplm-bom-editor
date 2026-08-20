@@ -1,0 +1,10 @@
+{
+  "extends": "../../api-extractor.base.json",
+  "mainEntryPointFilePath": "<projectFolder>/.build/worker.d.ts",
+  "bundledPackages": [
+    "@bom-editor/worker"
+  ],
+  "apiReport": {
+    "reportFileName": "core-worker"
+  }
+}

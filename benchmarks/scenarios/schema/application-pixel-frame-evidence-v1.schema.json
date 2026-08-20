@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "application-pixel-frame-evidence-v1.schema.json",
+  "title": "F3 fixed-scroll application Canvas pixel evidence v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "protocolId",
+    "window",
+    "expectedRevision",
+    "trajectory",
+    "scrollStates",
+    "paintStates",
+    "completeness"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "bom-f3-application-pixel-frame-evidence/v1"
+    },
+    "protocolId": {
+      "const": "bom-f3-fixed-scroll-pixel-correlation/v1"
+    },
+    "window": { "$ref": "#/$defs/window" },
+    "expectedRevision": { "type": "string", "minLength": 1 },
+    "trajectory": { "$ref": "#/$defs/trajectory" },
+    "scrollStates": {
+      "type": "array",
+      "minItems": 3,
+      "items": { "$ref": "#/$defs/scrollState" }
+    },
+    "paintStates": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/paintState" }
+    },
+    "completeness": { "$ref": "#/$defs/completeness" }
+  },
+  "$defs": {
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "startMark",
+        "endMark",
+        "startTimeMs",
+        "endTimeMs",
+        "durationMs"
+      ],
+      "properties": {
+        "id": { "const": "f3-10k-scroll-30s" },
+        "startMark": {
+          "const": "bom:f3:scroll:f3-10k-scroll-30s:start"
+        },
+        "endMark": {
+          "const": "bom:f3:scroll:f3-10k-scroll-30s:end"
+        },
+        "startTimeMs": { "type": "number", "minimum": 0 },
+        "endTimeMs": { "type": "number", "exclusiveMinimum": 0 },
+        "durationMs": {
+          "type": "number",
+          "minimum": 30000,
+          "maximum": 30033.334
+        }
+      }
+    },
+    "trajectory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol",
+        "axis",
+        "waveform",
+        "direction",
+        "easing",
+        "driver",
+        "cycles",
+        "durationMs",
+        "minimumScrollTop",
+        "maximumScrollTop",
+        "finalObservedScrollTop"
+      ],
+      "properties": {
+        "protocol": { "const": "bom-f3-scroll-trajectory/v1" },
+        "axis": { "const": "vertical" },
+        "waveform": { "const": "triangle" },
+        "direction": { "const": "forward-then-reverse" },
+        "easing": { "const": "linear" },
+        "driver": { "const": "requestAnimationFrame" },
+        "cycles": { "const": 1 },
+        "durationMs": { "const": 30000 },
+        "minimumScrollTop": { "const": 0 },
+        "maximumScrollTop": { "type": "number", "exclusiveMinimum": 0 },
+        "finalObservedScrollTop": { "type": "number", "minimum": 0 }
+      }
+    },
+    "scrollState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sequence",
+        "changedAtMs",
+        "requestedScrollTop",
+        "observedScrollTop"
+      ],
+      "properties": {
+        "sequence": { "type": "integer", "minimum": 0 },
+        "changedAtMs": { "type": "number", "minimum": 0 },
+        "requestedScrollTop": { "type": "number", "minimum": 0 },
+        "observedScrollTop": { "type": "number", "minimum": 0 }
+      }
+    },
+    "paintState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sequence",
+        "completedAtMs",
+        "revision",
+        "scrollLeft",
+        "scrollTop",
+        "viewport",
+        "surface",
+        "layers"
+      ],
+      "properties": {
+        "sequence": { "type": "integer", "minimum": 0 },
+        "completedAtMs": { "type": "number", "minimum": 0 },
+        "revision": { "type": "string", "minLength": 1 },
+        "scrollLeft": { "type": "number", "minimum": 0 },
+        "scrollTop": { "type": "number", "minimum": 0 },
+        "viewport": { "$ref": "#/$defs/size" },
+        "surface": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["x", "y", "width", "height"],
+          "properties": {
+            "x": { "type": "number" },
+            "y": { "type": "number" },
+            "width": { "type": "number", "exclusiveMinimum": 0 },
+            "height": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        "layers": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": { "$ref": "#/$defs/layer" },
+          "allOf": [
+            {
+              "contains": {
+                "type": "object",
+                "properties": { "layer": { "const": "background" } },
+                "required": ["layer"]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            },
+            {
+              "contains": {
+                "type": "object",
+                "properties": { "layer": { "const": "content" } },
+                "required": ["layer"]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            }
+          ]
+        }
+      }
+    },
+    "size": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height"],
+      "properties": {
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "layer",
+        "readbackSucceeded",
+        "sampledPixelCount",
+        "nonTransparentPixelCount",
+        "rgbaChecksum"
+      ],
+      "properties": {
+        "layer": { "enum": ["background", "content"] },
+        "readbackSucceeded": { "type": "boolean" },
+        "sampledPixelCount": { "type": "integer", "minimum": 0 },
+        "nonTransparentPixelCount": { "type": "integer", "minimum": 0 },
+        "rgbaChecksum": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9a-f]{8}$"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "readbackSucceeded": { "const": true } },
+            "required": ["readbackSucceeded"]
+          },
+          "then": {
+            "properties": {
+              "sampledPixelCount": { "const": 2048 },
+              "rgbaChecksum": { "type": "string" }
+            }
+          },
+          "else": {
+            "properties": {
+              "sampledPixelCount": { "const": 0 },
+              "nonTransparentPixelCount": { "const": 0 },
+              "rgbaChecksum": { "type": "null" }
+            }
+          }
+        }
+      ]
+    },
+    "completeness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scrollStateCount",
+        "paintStateCount",
+        "paintStatesInsideWindow",
+        "readbackFailureCount"
+      ],
+      "properties": {
+        "scrollStateCount": { "type": "integer", "minimum": 3 },
+        "paintStateCount": { "type": "integer", "minimum": 1 },
+        "paintStatesInsideWindow": { "type": "integer", "minimum": 1 },
+        "readbackFailureCount": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

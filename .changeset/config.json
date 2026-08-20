@@ -1,0 +1,36 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.0/schema.json",
+  "changelog": ["@changesets/cli/changelog", null],
+  "commit": false,
+  "fixed": [
+    [
+      "@qkplm/bom-editor",
+      "@qkplm/bom-editor-react",
+      "@qkplm/bom-editor-vue",
+      "@qkplm/bom-editor-umd"
+    ]
+  ],
+  "linked": [],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": [
+    "@bom-editor/contracts",
+    "@bom-editor/datasource",
+    "@bom-editor/editor",
+    "@bom-editor/model",
+    "@bom-editor/renderer-canvas",
+    "@bom-editor/runtime",
+    "@bom-editor/transaction",
+    "@bom-editor/visible-projection",
+    "@bom-editor/worker",
+    "@bom-editor/benchmark-fixtures",
+    "@bom-editor/benchmark-scenarios",
+    "@bom-editor/demo",
+    "@bom-editor/property-gate"
+  ],
+  "privatePackages": {
+    "version": false,
+    "tag": false
+  }
+}

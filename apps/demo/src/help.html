@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light">
+    <title>BOM 编辑器使用帮助</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/guide.css">
+  </head>
+  <body class="docs-page help-page">
+    <div class="docs-shell">
+      <header class="docs-header">
+        <a class="docs-brand" href="/" aria-label="返回 BOM 编辑器工作台">
+          <span class="docs-brand-rule" aria-hidden="true"></span>
+          <span><strong>BOM 编辑器</strong><small>组件使用帮助</small></span>
+        </a>
+        <nav class="docs-nav workspace-tabs" role="tablist" aria-label="BOM 编辑器页面">
+          <a class="workspace-tab" role="tab" aria-selected="false" href="/">工作台</a>
+          <a class="workspace-tab" role="tab" aria-selected="false" href="/examples.html">示例中心</a>
+          <a class="workspace-tab is-active" role="tab" aria-selected="true" aria-current="page" href="/help.html">帮助文档</a>
+        </nav>
+      </header>
+
+      <main class="docs-main help-main">
+        <section class="docs-intro help-intro">
+          <p class="docs-eyebrow">USER GUIDE / PUBLIC CONTRACT</p>
+          <h1>BOM 编辑器使用帮助</h1>
+          <p>这份帮助面向集成组件的前端开发者和实际操作人员，说明工作台中的常用操作、受控输入输出和失败时的处理方式。</p>
+          <div class="help-search-wrap">
+            <label for="help-search">搜索帮助内容</label>
+            <input id="help-search" type="search" placeholder="例如：冻结列、填充柄、粘贴、Undo" autocomplete="off">
+            <span id="help-search-count" role="status" aria-live="polite">10 个主题</span>
+          </div>
+        </section>
+
+        <div class="help-layout">
+          <aside class="help-toc" aria-label="帮助目录">
+            <div class="help-toc-heading">目录</div>
+            <a href="#quick-start">快速开始</a>
+            <a href="#editing">编辑与提交</a>
+            <a href="#selection">选区与填充柄</a>
+            <a href="#columns">行列与冻结</a>
+            <a href="#find-format">查找与显示格式</a>
+            <a href="#clipboard">复制、剪切与粘贴</a>
+            <a href="#history">撤销、重做与快捷键</a>
+            <a href="#integration">Props 与 Outputs</a>
+            <a href="#performance">性能与边界</a>
+            <a href="#troubleshooting">故障排查</a>
+            <a class="help-toc-example" href="/examples.html">打开交互示例 →</a>
+          </aside>
+
+          <section class="help-content" aria-label="帮助正文">
+            <article class="help-section" id="quick-start" data-help-section>
+              <header><span class="help-section-number">01</span><div><h2>快速开始</h2><p>先从独立示例确认 Props/Outputs，再打开完整 10K 工作台。</p></div></header>
+              <div class="help-section-body">
+                <ol class="help-steps">
+                  <li><strong>打开工作台</strong><span>访问 <code>/</code>，等待状态栏变为“10K 文档已就绪”。</span></li>
+                  <li><strong>选择目标单元格</strong><span>单击任意可编辑格，列设置、输入和右键菜单会绑定到当前地址。</span></li>
+                  <li><strong>验证输出</strong><span>编辑、列操作和粘贴完成后，观察状态栏以及宿主收到的事件。</span></li>
+                </ol>
+                <div class="help-callout"><strong>页面职责</strong><span>工作台用于真实鼠标键盘操作；示例中心用于查看协议输入输出；验收页 <code>/acceptance.html</code> 只用于自动化测量，不是日常操作入口。</span></div>
+              </div>
+            </article>
+
+            <article class="help-section" id="editing" data-help-section>
+              <header><span class="help-section-number">02</span><div><h2>编辑与提交</h2><p>编辑器先保留草稿，只有提交校验通过后才产生文档事务。</p></div></header>
+              <div class="help-section-body help-two-columns">
+                <div><h3>鼠标与键盘</h3><ul><li>双击单元格或按 <kbd>Enter</kbd>/<kbd>F2</kbd> 进入编辑。</li><li>输入期间由 DOM Portal 承载草稿，<kbd>Enter</kbd> 提交，<kbd>Esc</kbd> 取消。</li><li>提交后默认移动到同列下一可见可编辑单元格。</li></ul></div>
+                <div><h3>失败语义</h3><ul><li>只读列、Schema 不合法或 revision 过期时不会产生部分修改。</li><li>错误会通过状态栏和错误输出报告，原 Snapshot 保持不变。</li><li>远程 DataSource 不属于纯前端组件门面，需由宿主自行协调。</li></ul></div>
+              </div>
+            </article>
+
+            <article class="help-section" id="selection" data-help-section>
+              <header><span class="help-section-number">03</span><div><h2>选区与填充柄</h2><p>矩形选区、轴选区和右下角填充柄分别对应不同的操作边界。</p></div></header>
+              <div class="help-section-body help-two-columns">
+                <div><h3>选区</h3><ul><li>拖动单元格可创建矩形选区，按 <kbd>Shift</kbd> 扩展端点。</li><li>点击行号选择整行，点击列头选择整列；<kbd>Ctrl/Cmd</kbd> 可追加范围。</li><li>多范围复制保持安全拒绝；删除、粘贴和复制式填充会在各自的原子边界内处理。</li></ul></div>
+                <div><h3>填充柄</h3><ul><li>拖动右下角小方块向下复制；合格的多范围会保留同伴范围。</li><li>按住 <kbd>Alt</kbd> 开始单矩形拖拽，按前两行数值或 ISO 时间继续序列。</li><li>拖到视口底部会自动滚动；移出虚拟行窗口后仍会继续预览。</li><li>释放、取消、丢失指针捕获或销毁组件时，预览会停止并清理。</li></ul></div>
+              </div>
+            </article>
+
+            <article class="help-section" id="columns" data-help-section>
+              <header><span class="help-section-number">04</span><div><h2>行列与冻结</h2><p>列操作集中在列头右键菜单，行操作集中在行号右键菜单。</p></div></header>
+              <div class="help-section-body">
+                <div class="operation-table" role="table" aria-label="行列操作"><div class="operation-row operation-head" role="row"><span>入口</span><span>可用操作</span><span>历史</span></div><div class="operation-row" role="row"><strong>列头右键</strong><span>左/右插入、删除、隐藏、显示全部、冻结到左侧/右侧、取消冻结、排序、筛选、格式、按内容自动调整列宽、恢复默认列宽和复制</span><span>交互 Undo/Redo</span></div><div class="operation-row" role="row"><strong>行号右键 / 拖动</strong><span>插入同级/子级、删除、上移/下移、增加/减少缩进、全部展开/折叠、设置行高、按换行自动调整、恢复默认行高、清除内容；拖动到上下边缘会自动滚动，释放后才移动节点</span><span>行高为交互历史；结构为文档事务</span></div><div class="operation-row" role="row"><strong>列边界</strong><span>鼠标拖动调整宽度；双击边界按当前渲染窗口自动适应；聚焦后使用 Ctrl/Cmd + Alt + 左/右</span><span>交互 Undo/Redo</span></div></div>
+                <div class="help-callout"><strong>列设置入口</strong><span>先选中列内单元格，再点击工作台顶部“列设置”，或从列头右键菜单进入。可修改显示名称和属性名称；属性名称必须是 Schema 的 <code>fieldName</code>，应用时会同步解析为实际 <code>fieldPath</code>。显示格式只改变 view，不改变原始规范值。</span></div>
+              </div>
+            </article>
+
+            <article class="help-section" id="find-format" data-help-section>
+              <header><span class="help-section-number">05</span><div><h2>查找与显示格式</h2><p>查找面板支持导航和计数，显示格式使用明确的列配置。</p></div></header>
+              <div class="help-section-body help-two-columns"><div><h3>查找</h3><ul><li><kbd>Ctrl/Cmd + F</kbd> 打开查找面板。</li><li>支持前缀、精确、模糊和正则模式，可区分大小写、匹配整个单元格。</li><li>按 <kbd>Enter</kbd>/<kbd>Shift + Enter</kbd> 定位下一项/上一项，计数显示为“当前 / 总数”。</li></ul></div><div><h3>格式</h3><ul><li>文本、整数、小数、百分比、货币、会计、科学计数、分数、日期和日期时间均由列设置选择。</li><li>小数位、千分位、货币代码、日期样式、对齐和自动换行均可单独配置。</li><li>非法格式配置会被拒绝，当前列保持原设置。</li></ul></div></div>
+            </article>
+
+            <article class="help-section" id="clipboard" data-help-section>
+              <header><span class="help-section-number">06</span><div><h2>复制、剪切与粘贴</h2><p>剪贴板操作采用浏览器受信事件和安全 Policy，避免误改数据。</p></div></header>
+              <div class="help-section-body help-two-columns"><div><h3>复制与剪切</h3><ul><li><kbd>Ctrl/Cmd + C</kbd> 复制当前选区；支持纯文本和受限 internal envelope。</li><li><kbd>Ctrl/Cmd + X</kbd> 只有在字段可编辑、非必填且 Policy 完整允许时才清除源字段。</li><li>剪贴板写入失败不会产生删除事务，审计不包含字段原文。</li></ul></div><div><h3>粘贴</h3><ul><li>按 internal → HTML 表格 → 纯文本顺序选择可声明的输入表示。</li><li>全部候选都失败时，`candidateFormat` 标记每条无值诊断的来源格式。</li><li>输入尺寸、单元格数量、公式前缀和目标代际都会在提交前检查。</li><li>成功粘贴只产生一个可撤销事务；取消或失败保持 Snapshot 不变。</li></ul></div></div>
+            </article>
+
+            <article class="help-section" id="history" data-help-section>
+              <header><span class="help-section-number">07</span><div><h2>撤销、重做与快捷键</h2><p>快捷键只在 treegrid 拥有焦点且不处于 IME/Portal 输入态时生效。</p></div></header>
+              <div class="help-section-body"><div class="shortcut-table" role="table" aria-label="快捷键表"><div class="shortcut-row shortcut-head"><span>操作</span><span>快捷键</span></div><div class="shortcut-row"><span>撤销 / 重做</span><kbd>Ctrl/Cmd + Z / Y</kbd></div><div class="shortcut-row"><span>复制 / 剪切</span><kbd>Ctrl/Cmd + C / X</kbd></div><div class="shortcut-row"><span>删除内容</span><kbd>Delete / Backspace</kbd></div><div class="shortcut-row"><span>向下填充</span><kbd>Ctrl/Cmd + D</kbd></div><div class="shortcut-row"><span>调整列宽</span><kbd>Ctrl/Cmd + Alt + ← / →</kbd></div><div class="shortcut-row"><span>移动列</span><kbd>Ctrl/Cmd + Shift + ← / →</kbd></div><div class="shortcut-row"><span>查找</span><kbd>Ctrl/Cmd + F</kbd></div></div></div>
+            </article>
+
+            <article class="help-section" id="integration" data-help-section>
+              <header><span class="help-section-number">08</span><div><h2>Props 与 Outputs</h2><p>组件门面只接收纯前端输入，宿主通过 outputs 获取结果并回显受控状态。</p></div></header>
+              <div class="help-section-body"><pre class="help-code"><code>const component = createBomEditorComponent({
+  schema,
+  document: snapshot,
+  columns: [
+    { columnId: 'materialCode', fieldName: 'materialCode', fieldPath: ['materialCode'], label: '物料编码', width: 140, editable: true, frozen: 'start' },
+    { columnId: 'quantity', fieldName: 'quantity', fieldPath: ['specification', 'quantity'], label: '数量', width: 116, editable: true, frozen: false },
+  ],
+  initialView: {
+    rowHeight: 30,
+    rowHeights: [{ occurrenceId: 'occ-0002', rowHeight: 48 }],
+    columns: [
+      { columnId: 'materialCode', width: 140, frozen: 'start', visible: true },
+      { columnId: 'quantity', width: 116, frozen: false, visible: true },
+    ],
+    expandedIds: ['occ-0001'],
+    selection: {
+      activeCell: { occurrenceId: 'occ-0001', columnId: 'materialCode' },
+      range: null,
+    },
+    scrollLeft: 0,
+    scrollTop: 0,
+  },
+  editNavigation: { enter: 'down', tab: 'next-editable' },
+  outputs: {
+    onDocumentChange: ({ snapshot, commit, patch }) =&gt; {
+      renderRevision(commit.revision);
+      persist(snapshot);
+    },
+    onViewChange: (event) =&gt; {
+      saveView({ columns: event.view.columns, rowHeights: event.view.rowHeights });
+    },
+    onError: (event) =&gt; showError(event.error.code),
+  },
+});</code></pre><div class="help-callout"><strong>受控边界</strong><span><code>schema</code>、<code>document</code>、列定义和 view 状态由宿主持有；剪贴板、导出、粘贴授权、插件和日志等函数型配置必须通过 TypeScript Props 传入。组件不会接受 DataSource、持久化或远程订阅对象。部分 Snapshot 的跨未加载结构移动会通过结构请求输出给宿主。</span></div><div class="help-two-columns"><div><h3>导出与展示</h3><ul><li><code>exportData()</code> 必须明确 <code>currentView</code>、<code>completeData</code> 或 <code>roundTripTemplate</code>，并通过宿主 <code>exportPolicy</code> 授权。</li><li><code>configurePresentation()</code> 只改变 locale、RTL、标签和主题；高对比由完整主题 token 提供。</li><li>浏览器缩放属于宿主容器环境，不会写入 Snapshot、revision 或组件视图状态。</li></ul></div><div><h3>多实例与销毁</h3><ul><li>每个实例必须使用独立 <code>instanceId</code>，焦点、选区和事务不会跨实例共享。</li><li><code>unmount()</code> 释放视图资源并允许重新 <code>mount()</code>；<code>destroy()</code> 才是最终销毁，之后不能复用实例。</li><li>示例中心的“多实例焦点隔离与生命周期”会真实演练上述顺序并显示返回结果。</li></ul></div></div></div>
+            </article>
+
+            <article class="help-section" id="performance" data-help-section>
+              <header><span class="help-section-number">09</span><div><h2>性能与边界</h2><p>Demo 用于功能体验，性能结论必须来自固定环境和正式 evidence runner。</p></div></header>
+              <div class="help-section-body help-two-columns"><div><h3>工作台能证明什么</h3><ul><li>真实鼠标、键盘、原生滚动、Canvas、语义 DOM 和 Portal 是否可用。</li><li>公开 API 的输入输出顺序、错误处理和 Undo/Redo 是否符合预期。</li><li>移动端 390 CSS px 下控件是否保持可操作。</li></ul></div><div><h3>工作台不能证明什么</h3><ul><li>不能替代 100K/正式 10K P95/P99 性能报告。</li><li>不能替代 WCAG/读屏人工验收、2 小时 soak 或内存留存结论。</li><li>不能将 smoke 的 unqualified 结果解释成 release qualification。</li></ul></div></div>
+            </article>
+
+            <article class="help-section" id="troubleshooting" data-help-section>
+              <header><span class="help-section-number">10</span><div><h2>故障排查</h2><p>先根据状态栏错误码判断是输入、权限、目标代际还是环境问题。</p></div></header>
+              <div class="help-section-body"><div class="troubleshooting-list"><details open><summary>页面没有列头、行号或滚动条</summary><p>确认使用生产构建并等待“10K 文档已就绪”；检查容器是否有稳定高度，避免把编辑器放进高度为 0 的父级。</p></details><details><summary>拖动列宽或列位置没有反应</summary><p>列头边界需要命中 6px 热区，列移动需要从列头文字区域开始；触摸设备不启动鼠标拖拽，使用列头右键或键盘快捷键。</p></details><details><summary>粘贴被拒绝</summary><p>查看状态栏错误码，重点检查目标列是否可编辑、输入是否超出限额、公式保护和 Policy 是否允许。拒绝不会改变 Snapshot。</p></details><details><summary>输出事件没有到达宿主</summary><p>确认组件没有 destroy，输出回调是函数，并使用当前 documentGeneration 和 revision 回显受控输入。</p></details></div><a class="docs-primary-link" href="/examples.html">用示例中心检查公开协议</a></div>
+            </article>
+          </section>
+        </div>
+      </main>
+      <footer class="docs-footer"><span>帮助内容以根目录白皮书和公开 API 契约为准。</span><a href="/examples.html">查看代码示例</a></footer>
+    </div>
+    <script type="module" src="/help.js"></script>
+  </body>
+</html>

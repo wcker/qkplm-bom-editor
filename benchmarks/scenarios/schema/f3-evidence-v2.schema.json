@@ -1,0 +1,404 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "f3-evidence-v2.schema.json",
+  "title": "BOM editor F3 browser evidence candidate v2",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schemaVersion",
+    "runId",
+    "generatedAt",
+    "mode",
+    "overall",
+    "f3Pass",
+    "qualification",
+    "trace"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "bom-f3-browser-evidence/v2"
+    },
+    "runId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "mode": {
+      "enum": ["smoke", "formal"]
+    },
+    "overall": {
+      "enum": ["candidate", "unqualified", "failed"]
+    },
+    "f3Pass": {
+      "const": false,
+      "description": "This runner remains fail closed until every formal and manual gate is complete."
+    },
+    "qualification": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "releaseQualified",
+        "certifiedTraceExtractor",
+        "destroyRetentionQualified",
+        "blockers"
+      ],
+      "properties": {
+        "releaseQualified": { "const": false },
+        "certifiedTraceExtractor": { "type": "boolean" },
+        "destroyRetentionQualified": { "const": false },
+        "blockers": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        }
+      }
+    },
+    "sampling": {
+      "type": "object",
+      "required": ["warmup", "measured"],
+      "properties": {
+        "warmup": { "type": "integer", "minimum": 1 },
+        "measured": { "type": "integer", "minimum": 3 }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "required": [
+        "coldInteractiveReadyCandidate",
+        "inputFeedbackCandidate",
+        "continuousScrollPresentation"
+      ],
+      "properties": {
+        "coldInteractiveReadyCandidate": {
+          "$ref": "f3-evidence.schema.json#/$defs/metric"
+        },
+        "inputFeedbackCandidate": {
+          "$ref": "f3-evidence.schema.json#/$defs/inputMetric"
+        },
+        "continuousScrollPresentation": {
+          "anyOf": [
+            { "$ref": "#/$defs/scrollMetric" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "gates": {
+      "type": "object",
+      "required": [
+        "lifecycle",
+        "performance",
+        "memory",
+        "memorySupported",
+        "memoryWithinLimit"
+      ],
+      "properties": {
+        "lifecycle": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "$ref": "f3-evidence.schema.json#/$defs/lifecycleMemoryEntry"
+          }
+        },
+        "performance": {
+          "type": "object",
+          "required": [
+            "coldInteractiveReadyCandidate",
+            "inputFeedbackRenderCommitCandidate",
+            "continuousScrollPresentation"
+          ],
+          "properties": {
+            "continuousScrollPresentation": {
+              "$ref": "#/$defs/scrollGate"
+            }
+          }
+        },
+        "memory": {
+          "$ref": "f3-evidence.schema.json#/$defs/memoryQualification"
+        },
+        "memorySupported": { "type": "boolean" },
+        "memoryWithinLimit": { "type": "null" }
+      }
+    },
+    "trace": {
+      "$ref": "#/$defs/trace"
+    },
+    "error": {
+      "type": "object"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "type": "object",
+        "not": {
+          "type": "object",
+          "properties": {
+            "error": {}
+          },
+          "required": ["error"]
+        }
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "sampling": {},
+          "metrics": {},
+          "gates": {}
+        },
+        "required": ["sampling", "metrics", "gates"]
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "trace": {
+            "type": "object",
+            "properties": {
+              "extraction": {
+                "type": "object",
+                "properties": {
+                  "status": { "const": "succeeded" }
+                },
+                "required": ["status"]
+              }
+            },
+            "required": ["extraction"]
+          }
+        },
+        "required": ["trace"]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "qualification": {
+            "type": "object",
+            "properties": {
+              "certifiedTraceExtractor": { "const": true }
+            }
+          },
+          "trace": {
+            "type": "object",
+            "properties": {
+              "certifiedExtractor": { "const": true }
+            }
+          }
+        }
+      },
+      "else": {
+        "type": "object",
+        "properties": {
+          "qualification": {
+            "type": "object",
+            "properties": {
+              "certifiedTraceExtractor": { "const": false }
+            }
+          },
+          "trace": {
+            "type": "object",
+            "properties": {
+              "certifiedExtractor": { "const": false }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "trace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "captured",
+        "certifiedExtractor",
+        "categories",
+        "captureError",
+        "artifact",
+        "extraction"
+      ],
+      "properties": {
+        "captured": { "type": "boolean" },
+        "certifiedExtractor": { "type": "boolean" },
+        "categories": {
+          "type": ["string", "null"]
+        },
+        "captureError": {
+          "type": ["object", "null"]
+        },
+        "artifact": {
+          "type": ["string", "null"]
+        },
+        "extraction": {
+          "$ref": "#/$defs/traceExtraction"
+        }
+      }
+    },
+    "traceExtraction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "certified",
+        "windowId",
+        "extractorId",
+        "profileId",
+        "evidenceSchemaVersion",
+        "evidenceArtifact",
+        "error"
+      ],
+      "properties": {
+        "status": {
+          "enum": ["not-attempted", "succeeded", "failed"]
+        },
+        "certified": { "type": "boolean" },
+        "windowId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "extractorId": {
+          "const": "bom-f3-chromium-compositor-presented-frame/v1"
+        },
+        "profileId": {
+          "enum": [
+            "chromium-150-display-frame/v1",
+            "chromium-151-display-frame/v1"
+          ]
+        },
+        "evidenceSchemaVersion": {
+          "const": "bom-f3-compositor-presented-frame-evidence/v1"
+        },
+        "evidenceArtifact": {
+          "type": ["string", "null"]
+        },
+        "error": {
+          "anyOf": [
+            { "$ref": "#/$defs/traceError" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "status": { "const": "succeeded" }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "type": "object",
+            "properties": {
+              "certified": { "const": true },
+              "evidenceArtifact": {
+                "type": "string",
+                "minLength": 1
+              },
+              "error": { "type": "null" }
+            }
+          },
+          "else": {
+            "type": "object",
+            "properties": {
+              "certified": { "const": false },
+              "evidenceArtifact": { "type": "null" },
+              "error": { "$ref": "#/$defs/traceError" }
+            }
+          }
+        }
+      ]
+    },
+    "traceError": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "code", "message", "diagnostics"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "diagnostics": {
+          "type": ["object", "array", "string", "number", "boolean", "null"]
+        }
+      }
+    },
+    "scrollMetric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "endpoint",
+        "authoritativeSource",
+        "windowDurationMs",
+        "presentedFrameCount",
+        "statistics",
+        "missedVsyncCount",
+        "compositorMissingOrCheckerboardFrameCount",
+        "applicationPixelBlankFrameCount"
+      ],
+      "properties": {
+        "endpoint": {
+          "type": "string",
+          "minLength": 1
+        },
+        "authoritativeSource": {
+          "const": "Display::FrameDisplayed"
+        },
+        "windowDurationMs": {
+          "type": "number",
+          "minimum": 30000
+        },
+        "presentedFrameCount": {
+          "type": "integer",
+          "minimum": 2
+        },
+        "statistics": {
+          "$ref": "f3-evidence.schema.json#/$defs/metric/properties/statistics"
+        },
+        "missedVsyncCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "compositorMissingOrCheckerboardFrameCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "applicationPixelBlankFrameCount": {
+          "type": ["integer", "null"],
+          "minimum": 0
+        }
+      }
+    },
+    "scrollGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "checks", "blockers"],
+      "properties": {
+        "status": {
+          "enum": ["passed", "failed", "unqualified"]
+        },
+        "checks": {
+          "type": ["object", "null"]
+        },
+        "blockers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

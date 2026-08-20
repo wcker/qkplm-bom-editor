@@ -1,0 +1,36 @@
+{
+  "name": "@bom-editor/transaction",
+  "version": "0.0.0",
+  "private": true,
+  "description": "DOM-free FIFO transaction, Patch, and history engine for BOM snapshots.",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "clean": "node scripts/clean-dist.mjs",
+    "prebuild": "pnpm --filter @bom-editor/model build",
+    "build": "pnpm run clean && tsc -p tsconfig.json",
+    "typecheck": "pnpm --filter @bom-editor/model build && tsc -p tsconfig.typecheck.json",
+    "check:boundary": "node scripts/check-boundary.mjs",
+    "test:index-equivalence": "node --test --test-isolation=none test/index-equivalence.test.mjs",
+    "test": "pnpm run build && pnpm run check:boundary && node --test --test-isolation=none test/transaction-engine.test.mjs test/index-equivalence.test.mjs"
+  },
+  "dependencies": {
+    "@bom-editor/contracts": "workspace:*",
+    "@bom-editor/model": "workspace:*"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

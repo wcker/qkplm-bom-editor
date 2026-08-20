@@ -1,0 +1,11 @@
+{
+  "name": "@bom-editor/property-gate",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:dependencies": "pnpm --dir ../.. --filter @bom-editor/transaction... --filter @bom-editor/visible-projection... --workspace-concurrency=1 run build",
+    "test:gate": "node --test --test-isolation=none test/property-composition.test.mjs test/diff-golden.test.mjs test/visible-position-composition.test.mjs",
+    "test": "pnpm run build:dependencies && pnpm run test:gate"
+  }
+}

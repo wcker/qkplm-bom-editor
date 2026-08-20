@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light">
+    <title>BOM 编辑器工作台</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script type="importmap">
+      {
+        "imports": {
+          "@bom-editor/benchmark-fixtures": "/benchmarks/fixtures/dist/index.js",
+          "@bom-editor/contracts": "/packages/contracts/dist/index.js",
+          "@qkplm/bom-editor": "/packages/core/dist/index.js",
+          "@bom-editor/datasource": "/packages/datasource/dist/index.js",
+          "@bom-editor/editor": "/packages/editor/dist/index.js",
+          "@bom-editor/model": "/packages/model/dist/index.js",
+          "@bom-editor/renderer-canvas": "/packages/renderer-canvas/dist/index.js",
+          "@bom-editor/runtime": "/packages/runtime/dist/index.js",
+          "@bom-editor/transaction": "/packages/transaction/dist/index.js",
+          "@bom-editor/visible-projection": "/packages/visible-projection/dist/index.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="app-header">
+        <div class="product-identity">
+          <span class="product-mark" aria-hidden="true">B</span>
+          <div class="product-copy">
+            <h1>工业 BOM 编辑器</h1>
+            <p>
+              <span>结构清单工作台</span>
+              <span class="product-copy-separator" aria-hidden="true"></span>
+              <span>本地演练</span>
+            </p>
+          </div>
+        </div>
+
+        <nav class="workspace-tabs" role="tablist" aria-label="BOM 编辑器页面">
+          <a class="workspace-tab is-active" role="tab" aria-selected="true" aria-current="page" href="/">工作台</a>
+          <a class="workspace-tab" role="tab" aria-selected="false" href="/examples.html">示例中心</a>
+          <a class="workspace-tab" role="tab" aria-selected="false" href="/help.html">帮助文档</a>
+        </nav>
+      </header>
+
+      <section class="workbench-toolbar" aria-label="编辑器工具栏">
+        <div class="toolbar-context">
+          <span class="toolbar-context-label">当前文档</span>
+          <span class="toolbar-context-value">BOM-10K-D6</span>
+        </div>
+        <nav class="command-bar" aria-label="编辑命令">
+          <div class="command-group" aria-label="历史操作">
+          <button id="undo-button" class="command-button command-button-icon-only" type="button" title="撤销" aria-label="撤销" aria-controls="editor-host" disabled>
+            <span class="command-icon" aria-hidden="true">&#8630;</span>
+          </button>
+          <button id="redo-button" class="command-button command-button-icon-only" type="button" title="重做" aria-label="重做" aria-controls="editor-host" disabled>
+            <span class="command-icon" aria-hidden="true">&#8631;</span>
+          </button>
+          </div>
+          <span class="command-divider" aria-hidden="true"></span>
+          <div class="command-group" aria-label="常用工具">
+          <button id="find-button" class="command-button" type="button" title="查找（Ctrl 或 Cmd + F）" aria-controls="find-panel" disabled>
+            <span class="command-icon" aria-hidden="true">&#9906;</span>
+            <span>查找</span>
+          </button>
+          <button id="column-settings-button" class="command-button" type="button" title="设置当前列格式" aria-controls="column-settings-panel" disabled>
+            <span class="command-icon" aria-hidden="true">&#9881;</span>
+            <span>列设置</span>
+          </button>
+          </div>
+          <details id="command-more" class="command-more">
+            <summary class="command-button command-more-trigger" title="更多操作" aria-label="更多操作">
+              <span class="command-icon" aria-hidden="true">&#8943;</span>
+              <span class="command-more-label">更多</span>
+            </summary>
+            <div class="command-more-menu" role="group" aria-label="更多编辑命令">
+          <button id="freeze-start-button" class="command-button" type="button" title="将当前列冻结到左侧" aria-controls="editor-host" disabled>
+            <span class="command-icon" aria-hidden="true">&#9664;</span>
+            <span>左冻结</span>
+          </button>
+          <button id="freeze-end-button" class="command-button" type="button" title="将当前列冻结到右侧" aria-controls="editor-host" disabled>
+            <span class="command-icon" aria-hidden="true">&#9654;</span>
+            <span>右冻结</span>
+          </button>
+          <button id="unfreeze-button" class="command-button" type="button" title="取消当前列冻结" aria-controls="editor-host" disabled>
+            <span class="command-icon" aria-hidden="true">&#8596;</span>
+            <span>取消冻结</span>
+          </button>
+          <button id="shortcuts-button" class="command-button" type="button" title="查看快捷键" aria-controls="shortcuts-panel" disabled>
+            <span class="command-icon" aria-hidden="true">?</span>
+            <span>快捷键</span>
+          </button>
+          <button id="reload-button" class="command-button" type="button" title="重载 10K 文档" aria-controls="editor-host" disabled>
+            <span class="command-icon" aria-hidden="true">&#8635;</span>
+            <span>重载 10K</span>
+          </button>
+            </div>
+          </details>
+          <button id="scenario-button" class="command-button command-button-primary" type="button" title="运行单次 F3 规范编辑场景" aria-controls="editor-host" disabled>
+            <span class="command-icon" aria-hidden="true">&#9654;</span>
+            <span>运行场景</span>
+          </button>
+        </nav>
+      </section>
+
+      <section class="metrics-strip" aria-label="文档与运行状态">
+        <dl class="metric metric-revision">
+          <dt>版本</dt>
+          <dd id="revision-value" title="尚未加载">--</dd>
+        </dl>
+        <dl class="metric">
+          <dt>节点</dt>
+          <dd id="node-count-value">--</dd>
+        </dl>
+        <dl class="metric">
+          <dt>可见</dt>
+          <dd id="visible-count-value">--</dd>
+        </dl>
+        <dl class="metric metric-capabilities">
+          <dt>能力</dt>
+          <dd id="capabilities-value">检测中</dd>
+        </dl>
+        <dl class="metric metric-timing">
+          <dt>单次耗时</dt>
+          <dd id="timing-value">--</dd>
+        </dl>
+      </section>
+
+      <main class="editor-workspace">
+        <section class="editor-frame" aria-label="BOM 编辑器工作区">
+          <div class="editor-frame-topline" aria-hidden="true">
+            <span class="editor-frame-title">BOM 结构视图</span>
+            <span class="editor-frame-hint">BOM-10K-D6</span>
+          </div>
+          <div id="editor-host" aria-busy="true"></div>
+          <aside id="find-panel" class="tool-panel" aria-label="查找" hidden>
+            <div class="tool-panel-header">
+              <strong>查找</strong>
+              <button id="find-close-button" class="tool-close-button" type="button" aria-label="关闭查找">&#215;</button>
+            </div>
+            <form id="find-form" class="find-form">
+              <input id="find-input" type="search" autocomplete="off" placeholder="输入物料编码或字段内容" aria-label="查找内容">
+              <select id="find-mode" aria-label="查找模式">
+                <option value="prefix">前缀</option>
+                <option value="exact">精确</option>
+                <option value="fuzzy">模糊</option>
+                <option value="regex">正则</option>
+              </select>
+              <button class="find-submit" type="submit">查找</button>
+            </form>
+            <div class="find-options">
+              <label class="find-case-option">
+                <input id="find-case-sensitive" type="checkbox">
+                <span>区分大小写</span>
+              </label>
+              <label class="find-case-option">
+                <input id="find-match-whole-cell" type="checkbox">
+                <span>匹配整个单元格</span>
+              </label>
+              <div class="find-navigation" aria-label="查找导航">
+                <button id="find-previous-button" type="button" title="上一项（Shift + Enter）" disabled>上一项</button>
+                <output id="find-counter" aria-live="polite">0 / 0</output>
+                <button id="find-next-button" type="button" title="下一项（Enter）" disabled>下一项</button>
+              </div>
+            </div>
+            <p id="find-status" class="tool-panel-status" role="status">输入查询后开始查找</p>
+          </aside>
+          <aside id="shortcuts-panel" class="tool-panel shortcuts-panel" aria-label="快捷键" hidden>
+            <div class="tool-panel-header">
+              <strong>快捷键</strong>
+              <button id="shortcuts-close-button" class="tool-close-button" type="button" aria-label="关闭快捷键">&#215;</button>
+            </div>
+            <dl class="shortcut-list">
+              <dt>编辑</dt><dd>Enter / F2</dd>
+              <dt>撤销 / 重做</dt><dd>Ctrl/Cmd + Z / Y</dd>
+              <dt>复制 / 剪切</dt><dd>Ctrl/Cmd + C / X</dd>
+              <dt>列宽</dt><dd>Ctrl/Cmd + Alt + 左/右</dd>
+              <dt>列位置</dt><dd>Ctrl/Cmd + Shift + 左/右</dd>
+              <dt>左 / 右冻结</dt><dd>Ctrl/Cmd + Alt + Shift + 左/右</dd>
+              <dt>取消冻结</dt><dd>Ctrl/Cmd + Alt + Shift + 上</dd>
+              <dt>查找</dt><dd>Ctrl/Cmd + F</dd>
+            </dl>
+          </aside>
+          <aside id="column-settings-panel" class="tool-panel column-settings-panel" aria-label="列设置" hidden>
+            <div class="tool-panel-header column-settings-header">
+              <div>
+                <strong>列设置</strong>
+                <p id="column-settings-column" class="column-settings-column">先选择一个单元格</p>
+              </div>
+              <button id="column-settings-close-button" class="tool-close-button" type="button" aria-label="关闭列设置">&#215;</button>
+            </div>
+            <div class="column-settings-body">
+              <label class="column-setting-field" for="column-label-input">
+                <span>显示名称</span>
+                <input id="column-label-input" type="text" maxlength="120" autocomplete="off">
+              </label>
+              <label class="column-setting-field" for="column-field-name-input">
+                <span>属性名称</span>
+                <input id="column-field-name-input" type="text" list="column-field-name-list" autocomplete="off" aria-describedby="column-field-name-hint">
+                <small id="column-field-name-hint">使用 Schema 中定义的 fieldId；应用时会同步更新绑定路径。</small>
+              </label>
+              <datalist id="column-field-name-list"></datalist>
+              <div class="column-binding-path" aria-live="polite">
+                <span>绑定路径</span>
+                <output id="column-field-path">--</output>
+              </div>
+              <label class="column-setting-field" for="column-format-select">
+                <span>显示格式</span>
+                <select id="column-format-select">
+                  <option value="text">文本</option>
+                  <option value="integer">整数</option>
+                  <option value="decimal">小数</option>
+                  <option value="percent">百分比</option>
+                  <option value="currency">货币</option>
+                  <option value="accounting">会计</option>
+                  <option value="scientific">科学计数</option>
+                  <option value="fraction">分数</option>
+                  <option value="date">日期</option>
+                  <option value="datetime">日期时间</option>
+                </select>
+              </label>
+              <div id="column-number-options" class="column-format-options" hidden>
+                <div class="column-format-option-row">
+                  <label for="column-minimum-fraction">最少小数位<input id="column-minimum-fraction" type="number" min="0" max="20" step="1" value="0"></label>
+                  <label for="column-maximum-fraction">最多小数位<input id="column-maximum-fraction" type="number" min="0" max="20" step="1" value="2"></label>
+                </div>
+                <label id="column-grouping-control" class="column-option-check" for="column-grouping-checkbox"><input id="column-grouping-checkbox" type="checkbox" checked> 使用千分位分隔符</label>
+                <label id="column-unit-control" class="column-option-select" for="column-unit-display">单位显示<select id="column-unit-display"><option value="preserve">显示规范单位</option><option value="hidden">隐藏单位</option></select></label>
+              </div>
+              <div id="column-date-options" class="column-format-options" hidden>
+                <label class="column-option-select" for="column-date-style-select">日期样式<select id="column-date-style-select"><option value="short">短日期</option><option value="medium">中日期</option><option value="long">长日期</option><option value="full">完整日期</option></select></label>
+                <label id="column-time-style-control" class="column-option-select" for="column-time-style-select" hidden>时间样式<select id="column-time-style-select"><option value="short">短时间</option><option value="medium">中时间</option><option value="long">长时间</option></select></label>
+              </div>
+              <div id="column-fraction-options" class="column-format-options" hidden>
+                <label class="column-option-select" for="column-fraction-denominator-select">最大分母<select id="column-fraction-denominator-select"><option value="10">一位分母（最大 10）</option><option value="100" selected>两位分母（最大 100）</option><option value="1000">三位分母（最大 1000）</option></select></label>
+                <label class="column-option-check" for="column-fraction-grouping-checkbox"><input id="column-fraction-grouping-checkbox" type="checkbox" checked> 使用千分位分隔符</label>
+              </div>
+              <label id="column-currency-options" class="column-setting-field" for="column-currency-select" hidden>
+                <span>货币代码</span>
+                <select id="column-currency-select">
+                  <option value="CNY">CNY - 人民币</option>
+                  <option value="USD">USD - 美元</option>
+                  <option value="EUR">EUR - 欧元</option>
+                  <option value="JPY">JPY - 日元</option>
+                </select>
+              </label>
+              <div class="column-format-preview" aria-label="格式示例">
+                <span>示例</span>
+                <output id="column-format-preview">BOM-1001</output>
+              </div>
+              <div class="column-setting-field">
+                <span id="column-alignment-label">水平对齐</span>
+                <div class="column-alignment-control" role="group" aria-labelledby="column-alignment-label">
+                  <button type="button" data-column-alignment="start" title="靠左对齐" aria-label="靠左对齐">左</button>
+                  <button type="button" data-column-alignment="center" title="居中对齐" aria-label="居中对齐">中</button>
+                  <button type="button" data-column-alignment="end" title="靠右对齐" aria-label="靠右对齐">右</button>
+                </div>
+              </div>
+              <label class="column-wrap-control" for="column-wrap-checkbox">
+                <span><strong>自动换行</strong><small>按当前行高显示文本</small></span>
+                <input id="column-wrap-checkbox" type="checkbox">
+              </label>
+            </div>
+            <div class="column-settings-footer">
+              <button id="column-settings-apply" class="find-submit" type="button">应用到当前列</button>
+            </div>
+          </aside>
+          <div id="boot-overlay" class="boot-overlay" role="status" aria-live="polite">
+            <span class="loading-bar" aria-hidden="true"></span>
+            <strong>正在装载 10K BOM</strong>
+          </div>
+        </section>
+      </main>
+
+      <footer class="session-bar">
+        <span id="session-indicator" class="session-indicator" data-state="loading" aria-hidden="true"></span>
+        <span id="session-status" role="status" aria-live="polite">正在初始化编辑器</span>
+        <span id="scenario-target" class="scenario-target">目标 --</span>
+      </footer>
+    </div>
+
+    <noscript>此工作台需要启用 JavaScript。</noscript>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>

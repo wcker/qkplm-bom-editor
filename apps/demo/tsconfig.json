@@ -1,0 +1,37 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@bom-editor/contracts": [
+        "../../packages/contracts/dist/index.d.ts"
+      ],
+      "@qkplm/bom-editor": [
+        "../../packages/core/dist/index.d.ts"
+      ],
+      "@qkplm/bom-editor-react": [
+        "../../packages/react/dist/index.d.ts"
+      ],
+      "@qkplm/bom-editor-umd": [
+        "../../packages/umd/dist/index.d.ts"
+      ],
+      "@qkplm/bom-editor-vue": [
+        "../../packages/vue/dist/index.d.ts"
+      ],
+      "@bom-editor/benchmark-fixtures": [
+        "../../benchmarks/fixtures/dist/index.d.ts"
+      ]
+    },
+    "rootDir": "src",
+    "outDir": "dist",
+    "declaration": false,
+    "declarationMap": false
+  },
+  "include": [
+    "src/**/*.ts"
+  ]
+}

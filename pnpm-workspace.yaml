@@ -3,3 +3,6 @@ packages:
   - "apps/*"
   - "benchmarks/*"
   - "tests/*"
+
+overrides:
+  nanoid: 3.3.18

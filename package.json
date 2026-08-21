@@ -20,6 +20,7 @@
   },
   "scripts": {
     "check:docs": "node scripts/check-docs.mjs",
+    "check:secrets": "node scripts/check-secrets.mjs",
     "changeset": "changeset",
     "version:packages": "changeset version",
     "release:verify": "node scripts/release-verify.mjs",
@@ -34,9 +35,9 @@
     "test:property": "pnpm --filter @bom-editor/property-gate test",
     "f2:coverage": "node scripts/check-f2-coverage.mjs",
     "build": "pnpm --recursive --workspace-concurrency=1 --if-present run build",
-    "typecheck": "pnpm --recursive --workspace-concurrency=1 --if-present run typecheck",
+    "typecheck": "pnpm run build && pnpm --recursive --workspace-concurrency=1 --if-present run typecheck",
     "test": "pnpm --recursive --workspace-concurrency=1 --if-present run test",
-    "check": "pnpm run check:docs && pnpm run typecheck && pnpm run test && pnpm run build && pnpm run check:api && pnpm run f2:coverage"
+    "check": "pnpm run check:secrets && pnpm run check:docs && pnpm run typecheck && pnpm run test && pnpm run check:api && pnpm run f2:coverage"
   },
   "devDependencies": {
     "@changesets/cli": "3.0.1",

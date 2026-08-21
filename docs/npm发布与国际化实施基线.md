@@ -1,13 +1,13 @@
 # npm 发布与国际化实施基线
 
-> 状态：`IMPLEMENTATION_VERIFIED`（本地工程与自动验证已完成；远端发布控制和实际发包未完成）  
+> 状态：`IMPLEMENTATION_VERIFIED`（本地工程、GitHub 发布控制与 CI 已验证；npm Trusted Publishing 和实际发包未完成）  
 > 生效日期：2026-08-20  
 > 适用范围：QKPLM BOM Editor 的公开 npm 包、发布工程、公开文档及组件运行时界面文案。  
 > 上位文档：[现代化高性能可复用 BOM 编辑器组件](../现代化高性能可复用BOM编辑器组件.md)、[ADR-0011](./adr/0011-qkplm-public-package-distribution-and-i18n.md)、[研发落地实施计划](./研发落地实施计划.md)、[需求追踪矩阵](./需求追踪矩阵.md)。
 
 本文件是已确认发布配置的唯一执行基线。本地实现已由相应命令验证为
-`IMPLEMENTATION_VERIFIED`；它不证明 F3 性能、人工可访问性、远端供应链控制或实际 npm 发布已经
-通过，更不构成 `PRODUCTION_CERTIFIED`。
+`IMPLEMENTATION_VERIFIED`；它不证明 F3 性能、人工可访问性、npm Trusted Publishing 或实际 npm
+发布已经通过，更不构成 `PRODUCTION_CERTIFIED`。
 
 ## 1. 边界与不变量
 
@@ -111,14 +111,14 @@ dist/integrity.json
 
 ## 5. 自动发布与仓库控制
 
-| ID | 已确认配置 | 规则 | 验证/证据 |
-| --- | --- | --- | --- |
-| CICD-001 | 发布触发 | 仅 GitHub Release 的 `v*` tag 触发 | 工作流校验 tag 格式及 GitHub Release 事件 |
-| CICD-002 | 发布源码 | tag 必须指向默认分支已合并提交 | GitHub API/merge-base 校验 |
-| CICD-003 | 发包身份 | GitHub Actions npm Trusted Publishing（OIDC）与 npm provenance | `id-token: write`、npm provenance 记录 |
-| CICD-004 | 组织管理 | `@qkplm` 由单一 Owner 管理；账号启用 2FA 并保存恢复码或硬件密钥 | npm 组织设置人工检查 |
-| CICD-005 | 分支保护 | 默认分支仅由 PR 合并；要求 CI 成功；单人维护不要求第二人审批 | GitHub ruleset |
-| CICD-006 | CI 禁止绕过 | 不使用长期 `NPM_TOKEN`，不允许手工 npm publish | 工作流权限与发布策略审查 |
+| ID | 已确认配置 | 规则 | 验证/证据 | 当前状态 |
+| --- | --- | --- | --- | --- |
+| CICD-001 | 发布触发 | 仅 GitHub Release 的 `v*` tag 触发 | 工作流校验 tag 格式及 GitHub Release 事件 | 已实现 |
+| CICD-002 | 发布源码 | tag 必须指向默认分支已合并提交 | GitHub API/merge-base 校验 | 已实现 |
+| CICD-003 | 发包身份 | GitHub Actions npm Trusted Publishing（OIDC）与 npm provenance | `id-token: write`、npm provenance 记录 | 工作流已实现；npm 绑定待人工完成 |
+| CICD-004 | 组织管理 | `@qkplm` 由单一 Owner 管理；账号启用 2FA 并保存恢复码或硬件密钥 | npm 组织设置人工检查 | 待 npm Owner 人工完成 |
+| CICD-005 | 分支保护 | 默认分支仅由 PR 合并；要求 CI 成功；单人维护不要求第二人审批 | GitHub ruleset | 已在远端验证 |
+| CICD-006 | CI 禁止绕过 | 不使用长期 `NPM_TOKEN`，不允许手工 npm publish | 工作流权限与发布策略审查 | 已在远端验证 |
 
 Release 工作流根据版本是否包含预发布标识自动选择 `next` 或 `latest`。发布完成后附带
 GitHub Release Notes、Changesets 生成的 changelog、tarball 校验信息、SBOM 和 SRI 清单。
@@ -167,9 +167,11 @@ GitHub Release Notes、Changesets 生成的 changelog、tarball 校验信息、S
 | 行为准则 | `CODE_OF_CONDUCT.md` 采用 Contributor Covenant，由维护者执行 |
 | 安全 | `SECURITY.md` 指向 GitHub Private Vulnerability Reporting |
 
-首次发包前的人工配置：npm 组织 `@qkplm` 的唯一 Owner 必须启用 2FA 并保管恢复方式；在 npm
-包设置中为本仓库的 Release workflow 配置 Trusted Publishing；在 GitHub 默认分支启用 PR/CI
-ruleset，并开启 Private Vulnerability Reporting。上述远端设置不能由本地仓库文件替代。
+首次发包前仍需人工配置：npm 组织 `@qkplm` 的唯一 Owner 必须启用 2FA 并保管恢复方式；在 npm
+包设置中为本仓库的 Release workflow 配置 Trusted Publishing。GitHub 远端已启用 `Protect main`
+规则集（PR、0 个审批、`verify`/`secrets` 必须通过、禁止删除与非快进更新）、Private Vulnerability
+Reporting、Secret Scanning、Push Protection 与 Dependabot 安全更新；这些设置仍不能替代 npm 组织
+身份控制。
 
 ## 8. 组件运行时国际化
 
@@ -225,10 +227,12 @@ ID。改变公开包边界、许可证、版本策略、发布身份、质量门
 
 ## 10. 当前结论
 
-当前状态为 `IMPLEMENTATION_VERIFIED`（限本地工程）：W1/W2 的公开包边界、自包含构建、UMD/SRI 与
-tarball smoke，W3 的内置双语词条和状态回归，以及 W4/W5 的本地脚本、工作流、治理文件和三浏览器
-严格 CSP smoke 均已通过。仍需在 GitHub/npm 远端完成 Trusted Publishing、规则集、私密漏洞报告和
-真实 CI 运行证据。
+当前状态为 `IMPLEMENTATION_VERIFIED`：W1/W2 的公开包边界、自包含构建、UMD/SRI 与 tarball smoke，
+W3 的内置双语词条和状态回归，以及 W4/W5 的本地脚本、工作流、治理文件和三浏览器严格 CSP smoke
+均已通过。GitHub 远端控制已于 2026-08-21 启用，`a2a2829` 的 CI 运行
+`32434020846` 已成功验证 Node 22 类型检查与测试、构建、API、tarball、三浏览器严格 CSP、许可证、
+生产漏洞审计和密钥扫描。仍需在 npm 远端完成唯一 Owner 的 2FA/恢复方式、Trusted Publishing 绑定，
+并通过真实 GitHub Release 执行首次发包。
 
 F3 正式资格、跨浏览器人工验收、读屏/WCAG、两小时 soak 和 npm 实际发布均未完成。因此不得将
 任何 npm 包标记为已发布、RC 合格或生产认证。

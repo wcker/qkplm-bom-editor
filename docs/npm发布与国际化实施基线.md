@@ -85,9 +85,8 @@ Apache-2.0 正文；所有公开 tarball 必须包含同一许可证文本，必
 
 ### 4.1 构建规则
 
-1. CI 固定 Node `22.x` 与 pnpm `11.8.0`，使用 `pnpm install --frozen-lockfile`；Release 固定 Node
-   `22.14.0` 并额外安装 npm `11.12.1`，在发包前检查其满足 npm OIDC 要求的 Node `>=22.14.0`、npm
-   `>=11.5.1`。
+1. CI 与 Release 均固定 Node `22.14.0`、pnpm `11.8.0` 和 npm `11.12.1`，使用
+   `pnpm install --frozen-lockfile`；发包前检查其满足 npm OIDC 要求的 Node `>=22.14.0`、npm `>=11.5.1`。
 2. 发布包必须由同一次干净 CI 构建产生；pnpm 负责生成、检查和 smoke 的最终 tarball，npm OIDC 仅发布该
    同一批 tarball，禁止使用本机未提交代码、分支临时提交或手工上传 tarball。
 3. 每个发布包执行 `prepack` 或等价的发布前验证，保证 `dist`、声明、README、LICENSE 和导出表一致。

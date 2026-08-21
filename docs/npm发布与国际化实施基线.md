@@ -231,8 +231,10 @@ ID。改变公开包边界、许可证、版本策略、发布身份、质量门
 W3 的内置双语词条和状态回归，以及 W4/W5 的本地脚本、工作流、治理文件和三浏览器严格 CSP smoke
 均已通过。GitHub 远端控制已于 2026-08-21 启用，`a2a2829` 的 CI 运行
 `32434020846` 已成功验证 Node 22 类型检查与测试、构建、API、tarball、三浏览器严格 CSP、许可证、
-生产漏洞审计和密钥扫描。仍需在 npm 远端完成唯一 Owner 的 2FA/恢复方式、Trusted Publishing 绑定，
-并通过真实 GitHub Release 执行首次发包。
+生产漏洞审计和密钥扫描；合并后的 `main` 最终提交 `6fec042` 亦由 CI 运行
+[`32435988283`](https://github.com/wcker/qkplm-bom-editor/actions/runs/32435988283) 成功复验同一组门禁。
+仍需在 npm 远端完成唯一 Owner 的 2FA/恢复方式、Trusted Publishing 绑定，并通过真实 GitHub Release
+执行首次发包。
 
 F3 正式资格、跨浏览器人工验收、读屏/WCAG、两小时 soak 和 npm 实际发布均未完成。因此不得将
 任何 npm 包标记为已发布、RC 合格或生产认证。

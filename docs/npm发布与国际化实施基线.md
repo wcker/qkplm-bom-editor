@@ -85,8 +85,11 @@ Apache-2.0 正文；所有公开 tarball 必须包含同一许可证文本，必
 
 ### 4.1 构建规则
 
-1. CI 固定 Node `22.x` 与 pnpm `11.8.0`，使用 `pnpm install --frozen-lockfile`。
-2. 发布包必须由同一次干净 CI 构建产生；禁止使用本机未提交代码、分支临时提交或手工上传 tarball。
+1. CI 固定 Node `22.x` 与 pnpm `11.8.0`，使用 `pnpm install --frozen-lockfile`；Release 固定 Node
+   `22.14.0` 并额外安装 npm `11.12.1`，在发包前检查其满足 npm OIDC 要求的 Node `>=22.14.0`、npm
+   `>=11.5.1`。
+2. 发布包必须由同一次干净 CI 构建产生；pnpm 负责生成、检查和 smoke 的最终 tarball，npm OIDC 仅发布该
+   同一批 tarball，禁止使用本机未提交代码、分支临时提交或手工上传 tarball。
 3. 每个发布包执行 `prepack` 或等价的发布前验证，保证 `dist`、声明、README、LICENSE 和导出表一致。
 4. 每个最终 tarball 必须在独立空项目中安装、导入和运行 smoke，禁止只在 monorepo 链接环境中验证。
 5. `exports` 是唯一受支持导入边界；保持精确 `types` 映射和 source map。`sideEffects: false` 仅可用于确实无导入副作用的包。
@@ -115,7 +118,7 @@ dist/integrity.json
 | --- | --- | --- | --- | --- |
 | CICD-001 | 发布触发 | 仅 GitHub Release 的 `v*` tag 触发 | 工作流校验 tag 格式及 GitHub Release 事件 | 已实现 |
 | CICD-002 | 发布源码 | tag 必须指向默认分支已合并提交 | GitHub API/merge-base 校验 | 已实现 |
-| CICD-003 | 发包身份 | GitHub Actions npm Trusted Publishing（OIDC）与 npm provenance | `id-token: write`、npm provenance 记录 | 工作流已实现；npm 绑定待人工完成 |
+| CICD-003 | 发包身份 | GitHub Actions npm Trusted Publishing（OIDC）与 npm provenance | `id-token: write`、npm OIDC 工具版本检查、npm provenance 记录 | 工作流已实现；npm 绑定待人工完成 |
 | CICD-004 | 组织管理 | `@qkplm` 由单一 Owner 管理；账号启用 2FA 并保存恢复码或硬件密钥 | npm 组织设置人工检查 | 待 npm Owner 人工完成 |
 | CICD-005 | 分支保护 | 默认分支仅由 PR 合并；要求 CI 成功；单人维护不要求第二人审批 | GitHub ruleset | 已在远端验证 |
 | CICD-006 | CI 禁止绕过 | 不使用长期 `NPM_TOKEN`，不允许手工 npm publish | 工作流权限与发布策略审查 | 已在远端验证 |

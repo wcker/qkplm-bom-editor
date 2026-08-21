@@ -27,12 +27,15 @@ jobs:
           version: 11.8.0
       - uses: actions/setup-node@v4
         with:
-          node-version: 22.x
+          node-version: 22.14.0
           cache: pnpm
+      - name: Install npm CLI with Trusted Publishing support
+        run: npm install --global npm@11.12.1
       - run: pnpm install --frozen-lockfile
+      - run: pnpm run check:release-tooling
       - run: node scripts/validate-release-tag.mjs ${{ github.event.release.tag_name }}
       - run: pnpm run check
-      - run: node scripts/release-verify.mjs --release-manifest release-evidence.json
+      - run: node scripts/release-verify.mjs --release-manifest release-evidence.json --tarball-directory release-tarballs
       - run: pnpm exec playwright-core install --with-deps chromium firefox webkit
       - run: pnpm run test:browser-release
       - name: Select npm dist-tag
@@ -50,14 +53,14 @@ jobs:
           format: spdx-json
           output-file: qkplm-bom-editor.spdx.json
       - name: Publish Core with npm provenance
-        run: pnpm --filter @qkplm/bom-editor publish --access public --provenance --no-git-checks --tag ${{ steps.tag.outputs.value }}
+        run: node scripts/publish-release-tarball.mjs @qkplm/bom-editor ${{ steps.tag.outputs.value }}
       - name: Publish React adapter with npm provenance
-        run: pnpm --filter @qkplm/bom-editor-react publish --access public --provenance --no-git-checks --tag ${{ steps.tag.outputs.value }}
+        run: node scripts/publish-release-tarball.mjs @qkplm/bom-editor-react ${{ steps.tag.outputs.value }}
       - name: Publish Vue adapter with npm provenance
-        run: pnpm --filter @qkplm/bom-editor-vue publish --access public --provenance --no-git-checks --tag ${{ steps.tag.outputs.value }}
+        run: node scripts/publish-release-tarball.mjs @qkplm/bom-editor-vue ${{ steps.tag.outputs.value }}
       - name: Publish UMD package with npm provenance
-        run: pnpm --filter @qkplm/bom-editor-umd publish --access public --provenance --no-git-checks --tag ${{ steps.tag.outputs.value }}
+        run: node scripts/publish-release-tarball.mjs @qkplm/bom-editor-umd ${{ steps.tag.outputs.value }}
       - name: Attach generated supply-chain evidence
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload ${{ github.event.release.tag_name }} packages/umd/dist/integrity.json qkplm-bom-editor.spdx.json release-evidence.json --clobber
+        run: gh release upload ${{ github.event.release.tag_name }} release-tarballs/*.tgz packages/umd/dist/integrity.json qkplm-bom-editor.spdx.json release-evidence.json --clobber

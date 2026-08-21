@@ -24,6 +24,7 @@
     "changeset": "changeset",
     "version:packages": "changeset version",
     "release:verify": "node scripts/release-verify.mjs",
+    "check:release-tooling": "node scripts/check-npm-oidc-tooling.mjs",
     "test:browser-release": "node scripts/browser-release-smoke.mjs",
     "check:api": "pnpm --filter @qkplm/bom-editor api:check",
     "api:update": "pnpm --filter @qkplm/bom-editor api:update",

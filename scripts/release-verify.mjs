@@ -49,13 +49,16 @@ const publicPackages = Object.freeze([
   },
 ]);
 const failures = [];
-const releaseManifestPath = parseReleaseManifestPath();
+const releaseOutput = parseReleaseOutput();
+const releaseManifestPath = releaseOutput.releaseManifestPath;
 const temporaryRoot = mkdtempSync(join(tmpdir(), 'qkplm-bom-editor-release-'));
 
 try {
   verifyWorkspaceMetadata();
   verifyBuildArtifacts();
-  const tarballs = createAndInspectTarballs();
+  const tarballs = createAndInspectTarballs(
+    releaseOutput.tarballDirectory ?? resolve(temporaryRoot, 'tarballs'),
+  );
   await smokeInstall(tarballs);
   writeReleaseManifest(tarballs);
   if (failures.length > 0) {
@@ -154,8 +157,10 @@ function verifyBuildArtifacts() {
   }
 }
 
-function createAndInspectTarballs() {
-  const tarballDirectory = resolve(temporaryRoot, 'tarballs');
+function createAndInspectTarballs(tarballDirectory) {
+  if (existsSync(tarballDirectory)) {
+    throw new Error(`Release tarball directory already exists: ${display(tarballDirectory)}.`);
+  }
   mkdirSync(tarballDirectory, { recursive: true });
   const tarballs = new Map();
   for (const entry of publicPackages) {
@@ -362,14 +367,34 @@ function display(path) {
   return path.slice(workspaceRoot.length + 1).replaceAll('\\', '/');
 }
 
-function parseReleaseManifestPath() {
-  if (process.argv.length === 2) return undefined;
-  if (process.argv.length !== 4 || process.argv[2] !== '--release-manifest') {
-    throw new Error('Usage: node scripts/release-verify.mjs [--release-manifest <path>]');
+function parseReleaseOutput() {
+  const argumentsList = process.argv.slice(2);
+  if (argumentsList.length === 0) return {};
+  if (argumentsList.length % 2 !== 0) {
+    throw new Error(
+      'Usage: node scripts/release-verify.mjs [--release-manifest <path>] [--tarball-directory <path>]',
+    );
   }
-  const candidate = resolve(workspaceRoot, process.argv[3]);
-  if (!candidate.startsWith(`${workspaceRoot}${sep}`) && candidate !== workspaceRoot) {
-    throw new Error('Release manifest output must stay inside the workspace.');
+  const output = {};
+  for (let index = 0; index < argumentsList.length; index += 2) {
+    const option = argumentsList[index];
+    const value = argumentsList[index + 1];
+    if (option !== '--release-manifest' && option !== '--tarball-directory') {
+      throw new Error(`Unsupported release verification option: ${option}.`);
+    }
+    if (output[option] !== undefined) throw new Error(`Duplicate release verification option: ${option}.`);
+    output[option] = resolveWorkspaceOutput(value, option);
+  }
+  return {
+    releaseManifestPath: output['--release-manifest'],
+    tarballDirectory: output['--tarball-directory'],
+  };
+}
+
+function resolveWorkspaceOutput(value, option) {
+  const candidate = resolve(workspaceRoot, value);
+  if (!candidate.startsWith(`${workspaceRoot}${sep}`) || candidate === workspaceRoot) {
+    throw new Error(`${option} must stay inside the workspace.`);
   }
   return candidate;
 }

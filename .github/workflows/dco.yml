@@ -11,4 +11,7 @@ jobs:
   check:
     runs-on: ubuntu-24.04
     steps:
-      - uses: dcoapp/app@v1
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - run: node scripts/check-dco.mjs ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}

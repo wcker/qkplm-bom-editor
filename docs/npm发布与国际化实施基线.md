@@ -117,10 +117,10 @@ dist/integrity.json
 | --- | --- | --- | --- | --- |
 | CICD-001 | 发布触发 | 仅 GitHub Release 的 `v*` tag 触发 | 工作流校验 tag 格式及 GitHub Release 事件 | 已实现 |
 | CICD-002 | 发布源码 | tag 必须指向默认分支已合并提交 | GitHub API/merge-base 校验 | 已实现 |
-| CICD-003 | 发包身份 | GitHub Actions npm Trusted Publishing（OIDC）与 npm provenance | `id-token: write`、npm OIDC 工具版本检查、npm provenance 记录 | 工作流已实现；npm 绑定待人工完成 |
+| CICD-003 | 发包身份 | GitHub Actions npm Trusted Publishing（OIDC）与 npm provenance | `id-token: write`、npm OIDC 工具版本检查、npm provenance 记录 | 工作流已实现；首发 bootstrap 与 npm 绑定待人工完成 |
 | CICD-004 | 组织管理 | `@qkplm` 由单一 Owner 管理；账号启用 2FA 并保存恢复码或硬件密钥 | npm 组织设置人工检查 | 待 npm Owner 人工完成 |
 | CICD-005 | 分支保护 | 默认分支仅由 PR 合并；要求 CI 成功；单人维护不要求第二人审批 | GitHub ruleset | 已在远端验证 |
-| CICD-006 | CI 禁止绕过 | 不使用长期 `NPM_TOKEN`，不允许手工 npm publish | 工作流权限与发布策略审查 | 已在远端验证 |
+| CICD-006 | CI 禁止绕过 | 不使用长期 `NPM_TOKEN`；首发 bootstrap 之后不允许手工 npm publish | 工作流权限与发布策略审查 | 已在远端验证 |
 
 Release 工作流根据版本是否包含预发布标识自动选择 `next` 或 `latest`。发布完成后附带
 GitHub Release Notes、Changesets 生成的 changelog、tarball 校验信息、SBOM 和 SRI 清单。
@@ -174,6 +174,11 @@ GitHub Release Notes、Changesets 生成的 changelog、tarball 校验信息、S
 规则集（PR、0 个审批、`verify`/`secrets` 必须通过、禁止删除与非快进更新）、Private Vulnerability
 Reporting、Secret Scanning、Push Protection 与 Dependabot 安全更新；这些设置仍不能替代 npm 组织
 身份控制。
+
+> 首发限制：npm 目前只允许为已存在的包配置 Trusted Publishing。四个 `@qkplm/*` 首发包尚未存在，
+> 因此无法在发布前完成 OIDC 绑定。首发必须由唯一 Owner 使用 2FA 执行一次受控 bootstrap 发布，随后
+> 立即为每个包绑定本仓库的 Release workflow；此后所有版本都只允许 GitHub Release 通过 OIDC 自动发布，
+> 不保留长期 `NPM_TOKEN`，也不再允许手工发包。该例外必须在真实发布前由 Owner 明确确认。
 
 ## 8. 组件运行时国际化
 

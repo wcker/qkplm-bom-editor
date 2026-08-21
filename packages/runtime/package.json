@@ -22,7 +22,7 @@
     "prebuild": "pnpm --filter @bom-editor/contracts build",
     "build": "pnpm run clean && tsc -p tsconfig.json",
     "typecheck": "pnpm --filter @bom-editor/contracts build && tsc -p tsconfig.typecheck.json",
-    "test": "pnpm run build && node --test --test-isolation=none test/runtime.test.mjs"
+    "test": "pnpm run build && node --test test/runtime.test.mjs"
   },
   "dependencies": {
     "@bom-editor/contracts": "workspace:*"

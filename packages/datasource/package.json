@@ -22,7 +22,7 @@
     "prebuild": "pnpm --filter @bom-editor/transaction build",
     "build": "pnpm run clean && tsc -p tsconfig.json",
     "typecheck": "pnpm --filter @bom-editor/transaction build && tsc -p tsconfig.typecheck.json",
-    "test": "pnpm run build && node --test --test-isolation=none test/memory-datasource.test.mjs test/remote-commit-coordinator.test.mjs test/remote-state-machine.test.mjs"
+    "test": "pnpm run build && node --test test/memory-datasource.test.mjs test/remote-commit-coordinator.test.mjs test/remote-state-machine.test.mjs"
   },
   "dependencies": {
     "@bom-editor/contracts": "workspace:*",

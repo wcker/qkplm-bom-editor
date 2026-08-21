@@ -21,7 +21,7 @@
     "prebuild": "pnpm --filter @bom-editor/runtime build && pnpm --filter @bom-editor/visible-projection build",
     "build": "tsc -p tsconfig.json",
     "typecheck": "pnpm --filter @bom-editor/runtime build && pnpm --filter @bom-editor/visible-projection build && tsc -p tsconfig.typecheck.json",
-    "test": "pnpm run build && node --test --test-isolation=none test/*.test.mjs"
+    "test": "pnpm run build && node --test test/*.test.mjs"
   },
   "dependencies": {
     "@bom-editor/contracts": "workspace:*",

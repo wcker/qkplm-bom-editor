@@ -133,7 +133,7 @@ pnpm --filter @bom-editor/transaction typecheck
 pnpm --filter @bom-editor/transaction test
 ```
 
-Tests use Node's built-in runner with `--test-isolation=none` and do not load DOM
+Tests use Node's built-in runner and do not load DOM
 or WebWorker libraries. The default suite includes five fixed PRNG seeds with
 256 mixed operations each. Every successful checkpoint compares all three
 incremental base indexes with `buildBomIndexes()`, recomputes the canonical

@@ -21,7 +21,7 @@
     "build": "tsc -p tsconfig.json",
     "pretypecheck": "pnpm --filter @bom-editor/contracts build",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "pnpm run build && node --test --test-isolation=none test/diff.test.mjs test/hash.test.mjs test/matching.test.mjs test/snapshot-index.test.mjs test/value-schema.test.mjs"
+    "test": "pnpm run build && node --test test/diff.test.mjs test/hash.test.mjs test/matching.test.mjs test/snapshot-index.test.mjs test/value-schema.test.mjs"
   },
   "dependencies": {
     "@bom-editor/contracts": "workspace:*"

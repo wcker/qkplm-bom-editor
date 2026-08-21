@@ -518,7 +518,7 @@ pnpm --filter @bom-editor/renderer-canvas test
 pnpm --filter @bom-editor/renderer-canvas build
 ```
 
-Node tests run with `--test-isolation=none`. Pure tests cover layout, column
+Node tests use the built-in runner. Pure tests cover layout, column
 windowing, fractional hit testing, coordinate transforms, and DPR budgeting.
 Minimal DOM mocks cover bounded 10K canvases, ARIA active proxies, Portal
 singleton behavior, host-injected treegrid descriptions, IME commit isolation,

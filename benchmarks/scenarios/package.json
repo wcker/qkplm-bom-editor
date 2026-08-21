@@ -5,7 +5,7 @@
   "description": "Executable prechecks for versioned BOM editor benchmark scenarios.",
   "type": "module",
   "scripts": {
-    "test": "node --test --test-isolation=none test/*.test.mjs",
+    "test": "node --test test/*.test.mjs",
     "benchmark:f3:headless": "node test/f3-headless.test.mjs",
     "benchmark:f4:headless": "node --expose-gc scripts/f4-headless-baseline.mjs",
     "benchmark:f3:browser:smoke": "node scripts/f3-browser-evidence.mjs --mode=smoke --headless",

@@ -23,8 +23,8 @@
     "build": "pnpm run clean && tsc -p tsconfig.json",
     "typecheck": "pnpm --filter @bom-editor/model build && tsc -p tsconfig.typecheck.json",
     "check:boundary": "node scripts/check-boundary.mjs",
-    "test:index-equivalence": "node --test --test-isolation=none test/index-equivalence.test.mjs",
-    "test": "pnpm run build && pnpm run check:boundary && node --test --test-isolation=none test/transaction-engine.test.mjs test/index-equivalence.test.mjs"
+    "test:index-equivalence": "node --test test/index-equivalence.test.mjs",
+    "test": "pnpm run build && pnpm run check:boundary && node --test test/transaction-engine.test.mjs test/index-equivalence.test.mjs"
   },
   "dependencies": {
     "@bom-editor/contracts": "workspace:*",

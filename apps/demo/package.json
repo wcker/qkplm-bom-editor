@@ -9,7 +9,7 @@
     "build:dependencies": "pnpm --filter @qkplm/bom-editor build && pnpm --filter @bom-editor/benchmark-fixtures build && pnpm --filter @qkplm/bom-editor-react build && pnpm --filter @qkplm/bom-editor-vue build && pnpm --filter @qkplm/bom-editor-umd build",
     "build": "pnpm run clean && tsc -p tsconfig.json && node scripts/copy-static.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "pnpm run build && node --test --test-isolation=none test/demo-static.test.mjs",
+    "test": "pnpm run build && node --test test/demo-static.test.mjs",
     "test:cdp": "node scripts/cdp-smoke.mjs",
     "test:clipboard:cdp": "node scripts/cdp-clipboard-smoke.mjs",
     "test:onboarding:browser": "node scripts/onboarding-browser-smoke.mjs",

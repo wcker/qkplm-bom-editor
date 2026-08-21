@@ -22,7 +22,7 @@
     "prebuild": "pnpm --filter @bom-editor/renderer-canvas build && pnpm --filter @bom-editor/datasource build && pnpm --filter @bom-editor/transaction build",
     "build": "pnpm run clean && tsc -p tsconfig.json",
     "typecheck": "pnpm run prebuild && tsc -p tsconfig.typecheck.json",
-    "test": "pnpm run build && node --test --test-isolation=none test/editor.test.mjs"
+    "test": "pnpm run build && node --test test/editor.test.mjs"
   },
   "dependencies": {
     "@bom-editor/contracts": "workspace:*",

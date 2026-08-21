@@ -326,9 +326,9 @@ test('RAF-only traces cannot substitute for compositor displayed frames', () => 
   );
 });
 
-test('the existing Chrome 150 gzip artifact is parsed and rejected for missing scroll markers', async () => {
+test('the versioned Chrome 150 gzip fixture is parsed and rejected for missing scroll markers', async () => {
   const artifact = await readFile(new URL(
-    '../../reports/f3/20260719T014201765Z-smoke-5c3f6170/traces/chromium-compositor.json.gz',
+    './fixtures/chromium-150-missing-scroll-markers.json.gz',
     import.meta.url,
   ));
   expectCode(
